@@ -22,7 +22,7 @@ export async function registerController(req: Request): Promise<Response>
 		
 		const hash: string = await bcrypt.hash(password, 10);
 
-		const [newUser] = await db.insert(users).values({
+		const [newUser]: ({ id: number; username: string; email: string; } | undefined)[] = await db.insert(users).values({
 			username,
 			email,
 			password_hash: hash

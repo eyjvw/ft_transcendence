@@ -11,4 +11,4 @@ RUN mkdir -p /app/data
 
 EXPOSE 4000
 
-CMD ["bun", "run", "src/index.ts"]
+CMD ["bun", "run", "src/server.ts"]
