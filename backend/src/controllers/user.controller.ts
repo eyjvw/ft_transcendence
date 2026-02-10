@@ -4,6 +4,7 @@ import { users } from "../db/schemas/users";
 import bcrypt from "bcrypt";
 import { z, type ZodSafeParseResult } from "zod";
 import { eq, or } from "drizzle-orm";
+import { createJWT, verifyJWT } from "../jwt/auth.jwt";
 
 export async function registerController(req: Request): Promise<Response>
 {
@@ -32,7 +33,12 @@ export async function registerController(req: Request): Promise<Response>
 			email: users.email
 		});
 
-		return new Response(JSON.stringify({ success: true, user: newUser }), { status: 200 });
+		return new Response(JSON.stringify({ success: true, user: newUser }), {
+			status: 200,
+			headers: {
+				"Set-Cookie": `token=${await createJWT(newUser!.id.toString()!)}; HttpOnly; Path=/`
+			}
+		});
 	}
 	catch(err: unknown)
 	{
@@ -40,3 +46,16 @@ export async function registerController(req: Request): Promise<Response>
 		return new Response(JSON.stringify({ error: "Server Error" }), { status: 500 });
 	}
 }
+
+//export async function loginController(req: Request): Promise<Response>
+//{
+//	try
+//	{
+
+//	}
+//	catch(err: unknown)
+//	{
+//		console.error(err);
+//		return new Response(JSON.stringify({ error: "Server Error" }), { status: 500 });
+//	}
+//}

@@ -7,7 +7,6 @@ const routes: Record<string, (req: Request) => Promise<Response>> = {
 const server: Bun.Server<undefined> = Bun.serve({
 	port: Number(Bun.env.PORT) || 4000,
 	fetch(req: Request): Promise<Response> {
-		console.log(req.method, new URL(req.url).pathname);
 		const handler: ((req: Request) => Promise<Response>) | undefined = routes[`${req.method}:${new URL(req.url).pathname}`];
 		return handler ? handler(req) : Promise.resolve(new Response("Not Found", { status: 404 }));
 	}
