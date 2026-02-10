@@ -1,0 +1,40 @@
+1. Product Owner (PO)
+
+- Définir la vision du produit et prioriser les fonctionnalités.
+- Maintenir le backlog du produit (liste des tâches à réaliser).
+- Décider des fonctionnalités à développer en fonction des besoins des utilisateurs.
+- Valider le travail terminé.
+- Communiquer avec les parties prenantes (évaluateurs, pairs).
+
+2. Project Manager / Scrum Master (PM)
+
+- Faciliter la coordination de l'équipe.
+- Organiser les réunions de planification et de suivi (hebdomadaires ou b gly).
+- Suivre l'avancement du projet et respecter les échéances.
+- Gérer les risques et les obstacles.
+- Assurer une bonne communication interne.
+
+3. Technical Lead / Architect
+
+- Superviser les décisions techniques et l’architecture du projet.
+- Choisir la stack technologique.
+- Garantir la qualité du code et les bonnes pratiques de développement.
+- Revoir le code critique.
+
+4. Développeurs (tous membres de l’équipe)
+
+- Implémenter les fonctionnalités et modules affectés.
+- Rédiger le code, participer aux revues de code, tester, et documenter.
+
+Organisation de l’équipe selon la taille :
+
+- Équipe de 4 : certains membres peuvent cumuler plusieurs rôles (ex : PO + Développeur).
+- Équipe de 5 : rôles plus spécialisés, avec des rôles dédiés (PO, PM, Tech Lead, 2 Développeurs).
+
+Importance :
+Chaque membre doit avoir un rôle clairement défini et documenté dans le fichier README.md. La répartition des responsabilités est essentielle pour assurer une organisation efficace, respecter le planning, et assurer une contribution équitable.
+
+À noter :
+Les rôles sont obligatoires et doivent être attribués à chaque membre, avec une documentation claire, car lors de l’évaluation, il sera demandé d’expliquer comment les rôles ont été distribués, comment le travail a été organisé, et comment chaque membre a contribué.
+
+Souhaitez-vous que je vous aide à définir ces rôles pour votre équipe ou à rédiger une description pour votre README ?
