@@ -1,0 +1,37 @@
+services:
+  frontend:
+    build: ./frontend
+    container_name: app_front
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./frontend/.env
+    depends_on:
+      - backend
+    command: bun run dev
+    volumes:
+      - ./frontend/src:/app/src
+      - ./frontend/public:/app/public
+
+  backend:
+    build: ./backend
+    container_name: app_backend
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./backend/.env
+    volumes:
+      - sqlite-data:/app/data
+
+  public_api:
+    build: ./public_api
+    container_name: app_public_api
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./public_api/.env
+    volumes:
+      - sqlite-data:/app/data
+
+volumes:
+  sqlite-data:
