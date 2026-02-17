@@ -1,10 +1,12 @@
 import { StatusCode } from "./types/status_code.ts";
+import { applyRateLimitHeaders, checkRateLimit, getClientId } from "./ratelimit/limiter.ts";
 
 const server: Bun.Server<undefined> = Bun.serve({
 	port: Number(Bun.env.PORT),
 	async fetch(req: Request): Promise<Response>
 	{
-		if (req.method === "OPTIONS") {
+		if (req.method === "OPTIONS")
+		{
 			return new Response(null, {
 				status: StatusCode.NO_CONTENT,
 				headers: {
@@ -18,6 +20,22 @@ const server: Bun.Server<undefined> = Bun.serve({
 		}
 
 		const url: URL = new URL(req.url);
+		const isWebsocketRoute = url.pathname.startsWith("/ws");
+		const rateLimitResult = isWebsocketRoute ? null : checkRateLimit(getClientId(req));
+
+		if (rateLimitResult && !rateLimitResult.allowed)
+		{
+			const headers: Headers = new Headers();
+
+			headers.set("Access-Control-Allow-Origin", Bun.env.FRONTEND_ORIGIN!);
+			headers.set("Access-Control-Allow-Credentials", "true");
+			headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+			headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+			applyRateLimitHeaders(headers, rateLimitResult);
+
+			return new Response("Too Many Requests", { status: StatusCode.TOO_MANY_REQUESTS, headers });
+		}
+
 		let target: string = "";
 
 		if (url.pathname.startsWith("/api/auth"))
@@ -36,10 +54,14 @@ const server: Bun.Server<undefined> = Bun.serve({
 		});
 
 		const headers: Headers = new Headers(upstream.headers);
+		
 		headers.set("Access-Control-Allow-Origin", Bun.env.FRONTEND_ORIGIN!);
 		headers.set("Access-Control-Allow-Credentials", "true");
 		headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 		headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+		if (rateLimitResult)
+			applyRateLimitHeaders(headers, rateLimitResult);
 
 		return new Response(upstream.body, {
 			status: upstream.status,
