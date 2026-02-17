@@ -15,7 +15,7 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -36,13 +36,27 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1>Login</h1>
+        <h1>Hello!</h1>
+        <p className="auth-subtitle">Sign in to your account here.</p>
+
+        <div className="oauth-section">
+          <button type="button" className="oauth-btn google-btn">
+            <span className="oauth-icon">G</span>
+            Continue with Google
+          </button>
+        </div>
+
+        <div className="divider">
+          <span>or</span>
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="email">Email ou Username</label>
+            <label className="sr-only" htmlFor="email">Email</label>
             <input
               id="email"
               type="text"
+              placeholder="Email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
@@ -51,10 +65,11 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Mot de passe</label>
+            <label className="sr-only" htmlFor="password">Password</label>
             <input
               id="password"
               type="password"
+              placeholder="Password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
@@ -65,15 +80,19 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
 
           {error && <div className="error-message">{error}</div>}
 
+          <button type="button" className="forgot-link">
+            Forgot password?
+          </button>
+
           <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'Connexion...' : 'Se connecter'}
+            {loading ? 'Signing in...' : 'Sign in'}
           </button>
         </form>
 
         <p className="switch-auth">
-          Pas encore de compte ?{' '}
+          Don&apos;t have an account yet?{' '}
           <button onClick={onSwitchToRegister} className="link-btn">
-            S'inscrire
+            Sign up!
           </button>
         </p>
       </div>

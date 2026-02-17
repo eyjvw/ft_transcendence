@@ -1,4 +1,19 @@
 services:
+  gateway:
+    build:
+      context: .
+      dockerfile: gateway/Dockerfile
+    container_name: app_gateway
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./gateway/.env
+    depends_on:
+      - auth
+    command: bun run src/index.ts
+    volumes:
+      - ./gateway/src:/app/src
+
   frontend:
     build: ./frontend
     container_name: app_front
@@ -7,30 +22,24 @@ services:
     env_file:
       - ./frontend/.env
     depends_on:
-      - backend
+      - gateway
     command: bun run dev
     volumes:
       - ./frontend/src:/app/src
       - ./frontend/public:/app/public
 
-  backend:
-    build: ./backend
-    container_name: app_backend
+  auth:
+    build:
+      context: .
+      dockerfile: backend/auth/Dockerfile
+    container_name: app_auth
     ports:
       - "4000:4000"
     env_file:
-      - ./backend/.env
+      - ./backend/auth/.env
+    command: bun run src/index.ts
     volumes:
-      - sqlite-data:/app/data
-
-  public_api:
-    build: ./public_api
-    container_name: app_public_api
-    ports:
-      - "5000:5000"
-    env_file:
-      - ./public_api/.env
-    volumes:
+      - ./backend/auth/src:/app/src
       - sqlite-data:/app/data
 
 volumes:

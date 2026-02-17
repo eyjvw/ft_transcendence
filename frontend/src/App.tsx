@@ -3,10 +3,11 @@ import './App.css';
 import Login from './components/Login';
 import Register from './components/Register';
 import Authenticated from './components/Authenticated';
+import EmailVerification from './components/EmailVerification';
 import { api } from './services/api';
 import type { User } from './types/auth';
 
-type View = 'loading' | 'login' | 'register' | 'authenticated';
+type View = 'loading' | 'login' | 'register' | 'verify-email' | 'authenticated';
 
 function App() {
   const [view, setView] = useState<View>('loading');
@@ -16,7 +17,11 @@ function App() {
     const result = await api.me();
     if (result.user) {
       setUser(result.user);
-      setView('authenticated');
+      if (!result.user.isActive) {
+        setView('verify-email');
+      } else {
+        setView('authenticated');
+      }
     } else {
       setView('login');
     }
@@ -42,6 +47,16 @@ function App() {
 
   if (view === 'authenticated' && user) {
     return <Authenticated user={user} />;
+  }
+
+  if (view === 'verify-email' && user) {
+    return (
+      <EmailVerification
+        user={user}
+        onRefresh={checkAuth}
+        onUserUpdate={(updatedUser) => setUser(updatedUser)}
+      />
+    );
   }
 
   if (view === 'register') {

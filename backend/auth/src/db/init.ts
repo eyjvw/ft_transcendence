@@ -5,6 +5,13 @@ const sqlite = new Database("/app/data/sqlite.db");
 export const db = drizzle(sqlite);
 
 db.run("PRAGMA foreign_keys = ON;");
+db.run("PRAGMA journal_mode = WAL;");
+db.run("PRAGMA synchronous = NORMAL;");
+db.run("PRAGMA temp_store = MEMORY;");
+db.run("PRAGMA cache_size = -20000;");
+db.run("PRAGMA busy_timeout = 5000;");
+db.run("PRAGMA page_size = 4096;");
+db.run("PRAGMA auto_vacuum = INCREMENTAL;");
 
 db.transaction((): void => {
 	db.run(`

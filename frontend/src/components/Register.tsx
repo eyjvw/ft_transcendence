@@ -16,7 +16,7 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setLoading(true);
@@ -37,13 +37,27 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1>Register</h1>
+        <h1>Hello!</h1>
+        <p className="auth-subtitle">Create your account here.</p>
+
+        <div className="oauth-section">
+          <button type="button" className="oauth-btn google-btn">
+            <span className="oauth-icon">G</span>
+            Continue with Google
+          </button>
+        </div>
+
+        <div className="divider">
+          <span>or</span>
+        </div>
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Username</label>
+            <label className="sr-only" htmlFor="username">Username</label>
             <input
               id="username"
               type="text"
+              placeholder="Username"
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               required
@@ -54,10 +68,11 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
           </div>
 
           <div className="form-group">
-            <label htmlFor="email">Email</label>
+            <label className="sr-only" htmlFor="email">Email</label>
             <input
               id="email"
               type="email"
+              placeholder="Email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
@@ -66,10 +81,11 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Mot de passe</label>
+            <label className="sr-only" htmlFor="password">Password</label>
             <input
               id="password"
               type="password"
+              placeholder="Password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
@@ -81,14 +97,14 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
           {error && <div className="error-message">{error}</div>}
 
           <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'Inscription...' : "S'inscrire"}
+            {loading ? 'Creating...' : 'Sign up'}
           </button>
         </form>
 
         <p className="switch-auth">
-          Déjà un compte ?{' '}
+          Already have an account?{' '}
           <button onClick={onSwitchToLogin} className="link-btn">
-            Se connecter
+            Sign in
           </button>
         </p>
       </div>

@@ -18,5 +18,10 @@ export const updateSchema = z.object({
 	language: z.enum(["en", "fr", "es", "de"]).optional()
 });
 
+export const emailUpdateSchema = z.object({
+	email: z.email()
+});
+
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
+export type EmailUpdateInput = z.infer<typeof emailUpdateSchema>;
