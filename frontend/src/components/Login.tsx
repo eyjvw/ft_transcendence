@@ -56,7 +56,7 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
             <input
               id="email"
               type="text"
-              placeholder="Email"
+              placeholder="Email or Username"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required

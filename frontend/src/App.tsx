@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import './App.css';
 import Login from './components/Login';
 import Register from './components/Register';
-import Authenticated from './components/Authenticated';
+import Main from './components/Main';
 import EmailVerification from './components/EmailVerification';
 import { api } from './services/api';
 import type { User } from './types/auth';
@@ -18,9 +18,9 @@ function App() {
     if (result.user) {
       setUser(result.user);
       if (!result.user.isActive) {
-        setView('verify-email');
-      } else {
         setView('authenticated');
+      } else {
+        setView('verify-email');
       }
     } else {
       setView('login');
@@ -46,7 +46,7 @@ function App() {
   }
 
   if (view === 'authenticated' && user) {
-    return <Authenticated user={user} />;
+    return <Main user={user} />;
   }
 
   if (view === 'verify-email' && user) {

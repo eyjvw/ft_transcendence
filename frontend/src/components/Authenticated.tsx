@@ -40,7 +40,7 @@ export default function Authenticated({ user }: AuthenticatedProps) {
           </div>
           <div>
             <p className="app-label">Email verification</p>
-            <p className="app-value">{user.isActive ? 'Verified' : 'Not verified'}</p>
+            <p className="app-value">{!user.isActive ? 'Verified' : 'Not verified'}</p>
           </div>
         </div>
       </section>
