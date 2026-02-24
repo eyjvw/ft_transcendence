@@ -1,15 +1,36 @@
 PROJECT_NAME := ft_transcendence
 COMPOSE_FILE := docker-compose.yml
+DC := docker compose -p $(PROJECT_NAME) -f $(COMPOSE_FILE)
+
+.DEFAULT_GOAL := up
+
+all: build up
 
 build:
-	docker compose -f $(COMPOSE_FILE) build
-up:
-	docker compose -f $(COMPOSE_FILE) up -d
-down:
-	docker compose -f $(COMPOSE_FILE) down
-logs:
-	docker compose -f $(COMPOSE_FILE) logs -f
-clean:
-	docker compose -f $(COMPOSE_FILE) down --rmi all --volumes --remove-orphans
+	$(DC) build
 
-.PHONY: build up down clean logs
+up:
+	$(DC) up -d --remove-orphans
+
+down:
+	$(DC) down --remove-orphans
+
+restart: down up
+
+rebuild:
+	$(DC) build --no-cache
+	$(DC) up -d --remove-orphans
+
+logs:
+	$(DC) logs -f
+
+ps:
+	$(DC) ps
+
+clean:
+	$(DC) down --rmi all --volumes --remove-orphans
+
+fclean: clean
+	docker system prune -af
+
+.PHONY: all build up down restart rebuild logs ps clean fclean
