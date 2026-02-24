@@ -1,0 +1,105 @@
+{
+  "common": {
+    "or": "or",
+    "loading": "Loading...",
+    "email": "Email",
+    "password": "Password",
+    "username": "Username"
+  },
+  "footer": {
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy",
+    "createdBy": "Created by {{names}} © {{year}}"
+  },
+  "login": {
+    "title": "Hello!",
+    "subtitle": "Sign in to your account here.",
+    "google": "Continue with Google",
+    "emailPlaceholder": "Email or Username",
+    "forgot": "Forgot password?",
+    "submit": "Sign in",
+    "submitting": "Signing in...",
+    "switch": "Don't have an account yet?",
+    "switchCta": "Sign up!",
+    "failed": "Login failed"
+  },
+  "register": {
+    "title": "Hello!",
+    "subtitle": "Create your account here.",
+    "google": "Continue with Google",
+    "emailPlaceholder": "Email",
+    "usernamePlaceholder": "Username",
+    "passwordPlaceholder": "Password",
+    "submit": "Sign up",
+    "submitting": "Creating...",
+    "switch": "Already have an account?",
+    "switchCta": "Sign in",
+    "failed": "Registration failed"
+  },
+  "verify": {
+    "title": "Verify your email",
+    "subtitle": "We need to confirm your email before you can access the app.",
+    "resent": "Verification email sent.",
+    "resend": "Resend verification email",
+    "resending": "Sending...",
+    "cta": "I have verified my email"
+  },
+  "main": {
+    "search": "Search your game",
+    "recentBets": "Recent bets",
+    "realtime": "Real time",
+    "game": "Game",
+    "user": "User",
+    "time": "Time",
+    "betAmount": "Bet amount",
+    "multiplier": "Multiplier",
+    "payout": "Payout",
+    "waiting": "Waiting for real-time data…",
+    "players": "players",
+    "playersOnline": "players online",
+    "modeSolo": "Solo",
+    "modeBot": "Vs a bot",
+    "modeOnline": "Vs an online player",
+    "launch": "Launch",
+    "profile": "Go to profile",
+    "coins": "Coins"
+  },
+  "auth": {
+    "loggedIn": "Logged in",
+    "welcome": "Welcome back, {{name}}!",
+    "subtitle": "You're signed in and ready to go.",
+    "userId": "User ID",
+    "emailVerification": "Email verification",
+    "verified": "Verified",
+    "notVerified": "Not verified",
+    "dashboard": "Go to dashboard",
+    "profile": "View profile"
+  },
+  "languages": {
+    "en": "English",
+    "fr": "French",
+    "ar": "Arabic"
+  },
+  "profile": {
+    "back": "Back",
+    "userId": "User ID",
+    "coins": "Coins",
+    "emailVerification": "Email verification",
+    "verified": "Verified",
+    "notVerified": "Not verified",
+    "language": "Language",
+    "languageTitle": "Change settings",
+    "edit": "Edit profile",
+    "editTitle": "Edit profile",
+    "editSubtitle": "Update your information",
+    "avatar": "Profile picture",
+    "avatarPlaceholder": "Paste image URL",
+    "save": "Save",
+    "saving": "Saving...",
+    "saved": "Profile updated.",
+    "changePfp": "Change pfp",
+    "avatarUpdated": "Profile picture updated.",
+    "avatarError": "Could not update profile picture.",
+    "logout": "Log out"
+  }
+}

@@ -1,17 +1,19 @@
 import type { User } from '../types/auth';
+import { useTranslation } from 'react-i18next';
 
 interface AuthenticatedProps {
   user: User;
 }
 
 export default function Authenticated({ user }: AuthenticatedProps) {
+  const { t } = useTranslation();
   return (
     <div className="app-container">
       <header className="app-header">
         <div>
-          <p className="app-eyebrow">Logged in</p>
-          <h1>Welcome back, {user.username}!</h1>
-          <p className="app-subtitle">You&apos;re signed in and ready to go.</p>
+          <p className="app-eyebrow">{t('auth.loggedIn')}</p>
+          <h1>{t('auth.welcome', { name: user.username })}</h1>
+          <p className="app-subtitle">{t('auth.subtitle')}</p>
         </div>
         {user.avatarUrl ? (
           <img className="app-avatar" src={user.avatarUrl} alt={user.username} />
@@ -25,32 +27,32 @@ export default function Authenticated({ user }: AuthenticatedProps) {
       <section className="app-card">
         <div className="app-card-row">
           <div>
-            <p className="app-label">Username</p>
+            <p className="app-label">{t('common.username')}</p>
             <p className="app-value">{user.username}</p>
           </div>
           <div>
-            <p className="app-label">Email</p>
+            <p className="app-label">{t('common.email')}</p>
             <p className="app-value">{user.email}</p>
           </div>
         </div>
         <div className="app-card-row">
           <div>
-            <p className="app-label">User ID</p>
+            <p className="app-label">{t('auth.userId')}</p>
             <p className="app-value">{user.id}</p>
           </div>
           <div>
-            <p className="app-label">Email verification</p>
-            <p className="app-value">{!user.isActive ? 'Verified' : 'Not verified'}</p>
+            <p className="app-label">{t('auth.emailVerification')}</p>
+            <p className="app-value">{user.isActive ? t('auth.verified') : t('auth.notVerified')}</p>
           </div>
         </div>
       </section>
 
       <section className="app-card app-card--actions">
         <button className="app-primary-btn" type="button">
-          Go to dashboard
+          {t('auth.dashboard')}
         </button>
         <button className="app-secondary-btn" type="button">
-          View profile
+          {t('auth.profile')}
         </button>
       </section>
     </div>

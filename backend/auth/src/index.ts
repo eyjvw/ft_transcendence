@@ -1,16 +1,17 @@
 import { loginController } from "./controllers/login.ts";
+import { logoutController } from "./controllers/logout.ts";
 import { meController } from "./controllers/me.ts";
+import { updateProfileController } from "./controllers/profile.ts";
 import { registerController } from "./controllers/register.ts";
-import { resendVerificationController, updateEmailController } from "./controllers/verification.ts";
 import { StatusCode } from "./types/status_code.ts";
 
 const routes: Record<string, (req: Request) => Promise<Response>> = {
 	"GET:/api/auth/me": meController,
+	"PUT:/api/auth/profile": updateProfileController,
+	"POST:/api/auth/logout": logoutController,
 
 	"POST:/api/auth/login": loginController,
 	"POST:/api/auth/register": registerController,
-	"POST:/api/auth/verify/resend": resendVerificationController,
-	"PUT:/api/auth/verify/email": updateEmailController
 }
 
 const server: Bun.Server<undefined> = Bun.serve({

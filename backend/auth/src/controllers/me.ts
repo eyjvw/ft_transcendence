@@ -22,7 +22,7 @@ export async function meController(req: Request): Promise<Response>
 		const user = await db.select().from(users).where(eq(users.id, Number(uid))).limit(1);
 
 		if (user.length < 1)
-			return new Response(JSON.stringify({ user: null }), { status: StatusCode.OK });
+			return new Response(JSON.stringify("User not found"), { status: StatusCode.NOT_FOUND });
 
 		return new Response(JSON.stringify({
 			user: {
@@ -30,7 +30,9 @@ export async function meController(req: Request): Promise<Response>
 				username: user[0]!.username,
 				email: user[0]!.email,
 				avatarUrl: user[0]!.avatar_url,
-				isActive: Boolean(user[0]!.is_active)
+				isActive: Boolean(user[0]!.is_active),
+				language: user[0]!.language,
+				coins: user[0]!.coins
 			}
 		}), { status: StatusCode.OK });
 	}

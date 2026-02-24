@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../services/api';
 import type { LoginData } from '../types/auth';
 
@@ -8,6 +9,7 @@ interface LoginProps {
 }
 
 export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<LoginData>({
     email: '',
     password: '',
@@ -28,7 +30,7 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
     } else if (result.success) {
       onSuccess();
     } else {
-      setError('Login failed');
+      setError(t('login.failed'));
       setLoading(false);
     }
   };
@@ -36,18 +38,18 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1>Hello!</h1>
-        <p className="auth-subtitle">Sign in to your account here.</p>
+        <h1>{t('login.title')}</h1>
+        <p className="auth-subtitle">{t('login.subtitle')}</p>
 
         <div className="oauth-section">
           <button type="button" className="oauth-btn google-btn">
             <span className="oauth-icon">G</span>
-            Continue with Google
+            {t('login.google')}
           </button>
         </div>
 
         <div className="divider">
-          <span>or</span>
+          <span>{t('common.or')}</span>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -56,7 +58,7 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
             <input
               id="email"
               type="text"
-              placeholder="Email or Username"
+              placeholder={t('login.emailPlaceholder')}
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
@@ -69,7 +71,7 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
             <input
               id="password"
               type="password"
-              placeholder="Password"
+              placeholder={t('common.password')}
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
@@ -81,18 +83,18 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
           {error && <div className="error-message">{error}</div>}
 
           <button type="button" className="forgot-link">
-            Forgot password?
+            {t('login.forgot')}
           </button>
 
           <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'Signing in...' : 'Sign in'}
+            {loading ? t('login.submitting') : t('login.submit')}
           </button>
         </form>
 
         <p className="switch-auth">
-          Don&apos;t have an account yet?{' '}
+          {t('login.switch')}{' '}
           <button onClick={onSwitchToRegister} className="link-btn">
-            Sign up!
+            {t('login.switchCta')}
           </button>
         </p>
       </div>

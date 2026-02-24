@@ -1,24 +1,27 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import './App.css';
 import Login from './components/Login';
 import Register from './components/Register';
 import Main from './components/Main';
 import EmailVerification from './components/EmailVerification';
+import Profile from './components/Profile';
 import { api } from './services/api';
 import type { User } from './types/auth';
 
-type View = 'loading' | 'login' | 'register' | 'verify-email' | 'authenticated';
+type View = 'loading' | 'login' | 'register' | 'verify-email' | 'authenticated' | 'profile';
 
 function App() {
   const [view, setView] = useState<View>('loading');
   const [user, setUser] = useState<User | null>(null);
   const year = new Date().getFullYear();
+  const { t, i18n } = useTranslation();
 
   const checkAuth = async () => {
     const result = await api.me();
     if (result.user) {
       setUser(result.user);
-      if (!result.user.isActive) {
+      if (result.user.isActive) {
         setView('authenticated');
       } else {
         setView('verify-email');
@@ -32,6 +35,13 @@ function App() {
     checkAuth();
   }, []);
 
+  useEffect(() => {
+    const lang = user?.language ?? 'en';
+    i18n.changeLanguage(lang);
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+  }, [user, i18n]);
+
   const handleAuthSuccess = () => {
     checkAuth();
   };
@@ -42,18 +52,35 @@ function App() {
     content = (
       <div className="auth-container">
         <div className="auth-card">
-          <h1>Chargement...</h1>
+          <h1>{t('common.loading')}</h1>
         </div>
       </div>
     );
   } else if (view === 'authenticated' && user) {
-    content = <Main user={user} />;
+    content = <Main user={user} onOpenProfile={() => setView('profile')} />;
+  } else if (view === 'profile' && user) {
+    content = (
+      <Profile
+        user={user}
+        onBack={() => setView('authenticated')}
+        onUserUpdate={(updatedUser) => {
+          setUser(updatedUser);
+          if (!updatedUser.isActive) {
+            setView('verify-email');
+          }
+        }}
+        onLogout={async () => {
+          await api.logout();
+          setUser(null);
+          setView('login');
+        }}
+        currentLanguage={user.language ?? 'en'}
+      />
+    );
   } else if (view === 'verify-email' && user) {
     content = (
       <EmailVerification
-        user={user}
         onRefresh={checkAuth}
-        onUserUpdate={(updatedUser) => setUser(updatedUser)}
       />
     );
   } else if (view === 'register') {
@@ -77,11 +104,13 @@ function App() {
       <div className="app-content">{content}</div>
       <footer className="app-footer">
         <div className="footer-links">
-          <a href="/terms" className="footer-link">Terms of Service</a>
+          <a href="/terms" className="footer-link">{t('footer.terms')}</a>
           <span className="footer-separator">•</span>
-          <a href="/privacy" className="footer-link">Privacy Policy</a>
+          <a href="/privacy" className="footer-link">{t('footer.privacy')}</a>
         </div>
-        <div className="footer-credits">Created by xxx, yyy, zzz © {year}</div>
+        <div className="footer-credits">
+          {t('footer.createdBy', { names: 'xxx, yyy, zzz', year })}
+        </div>
       </footer>
     </div>
   );

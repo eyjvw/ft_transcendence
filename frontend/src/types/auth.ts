@@ -4,6 +4,8 @@ export interface User {
   email: string;
   avatarUrl: string | null;
   isActive: boolean;
+  coins?: number;
+  language?: string;
 }
 
 export interface RegisterData {

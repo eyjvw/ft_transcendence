@@ -9,13 +9,15 @@ const server: Bun.Server<undefined> = Bun.serve({
 	{
 		if (req.method === "OPTIONS")
 		{
+			const allowHeaders = req.headers.get("Access-Control-Request-Headers") || "Content-Type, Authorization";
 			return new Response(null, {
 				status: StatusCode.NO_CONTENT,
 				headers: {
-					"Access-Control-Allow-Origin": req.headers.get("Origin") ?? "",
+					"Access-Control-Allow-Origin": Bun.env.FRONTEND_ORIGIN || req.headers.get("Origin") || "*",
 					"Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
-					"Access-Control-Allow-Headers": req.headers.get("Access-Control-Request-Headers") ?? "",
+					"Access-Control-Allow-Headers": allowHeaders,
 					"Access-Control-Allow-Credentials": "true",
+					"Access-Control-Expose-Headers": "Set-Cookie",
 					"Vary": "Origin"
 				}
 			});
@@ -59,11 +61,21 @@ const server: Bun.Server<undefined> = Bun.serve({
 		});
 
 		const headers: Headers = new Headers(upstream.headers);
-		
-		headers.set("Access-Control-Allow-Origin", Bun.env.FRONTEND_ORIGIN!);
+		const getSetCookie = (upstream.headers as unknown as { getSetCookie?: () => string[] }).getSetCookie;
+		if (getSetCookie) {
+			const cookies = getSetCookie();
+			cookies.forEach((cookie) => headers.append("Set-Cookie", cookie));
+		} else {
+			const cookie = upstream.headers.get("set-cookie");
+			if (cookie)
+				headers.append("Set-Cookie", cookie);
+		}
+
+		headers.set("Access-Control-Allow-Origin", Bun.env.FRONTEND_ORIGIN || "*");
 		headers.set("Access-Control-Allow-Credentials", "true");
 		headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
 		headers.set("Access-Control-Allow-Headers", "Content-Type, Authorization");
+		headers.set("Access-Control-Expose-Headers", "Set-Cookie");
 
 		if (rateLimitResult)
 			applyRateLimitHeaders(headers, rateLimitResult);

@@ -11,5 +11,6 @@ export const users = sqliteTable("users", {
 	a2f_secret: text("a2f_secret"),
 	created_at: text("created_at").default("CURRENT_TIMESTAMP"),
 	updated_at: text("updated_at").default("CURRENT_TIMESTAMP"),
-	language: text("language").default("en")
+	language: text("language").default("en"),
+	coins: integer("coins").default(1000)
 });

@@ -5,6 +5,12 @@ const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`;
 type ErrorPayload = { error?: unknown };
 type BasicResponse = { success?: boolean; error?: string };
 type UserResponse = { success?: boolean; user?: User; error?: string };
+type ProfileUpdatePayload = {
+  username?: string;
+  email?: string;
+  avatar_url?: string;
+  language?: 'en' | 'fr' | 'ar';
+};
 
 const stringifyError = (payload: ErrorPayload | null | undefined): string => {
   const raw = payload?.error;
@@ -127,18 +133,37 @@ export const api = {
     }
   },
 
-  async updateEmail(email: string): Promise<UserResponse> {
+  async updateProfile(payload: ProfileUpdatePayload): Promise<UserResponse> {
     try {
-      const response = await fetch(`${API_URL}/verify/email`, {
+      const response = await fetch(`${API_URL}/profile`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({ email }),
+        body: JSON.stringify(payload),
       });
 
       const result: UserResponse & ErrorPayload = await response.json();
+
+      if (!response.ok) {
+        return { error: stringifyError(result) };
+      }
+
+      return result;
+    } catch (error) {
+      return { error: 'Network error' };
+    }
+  },
+
+  async logout(): Promise<BasicResponse> {
+    try {
+      const response = await fetch(`${API_URL}/logout`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      const result: BasicResponse & ErrorPayload = await response.json();
 
       if (!response.ok) {
         return { error: stringifyError(result) };

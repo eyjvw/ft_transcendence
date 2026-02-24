@@ -1,0 +1,105 @@
+{
+  "common": {
+    "or": "ou",
+    "loading": "Chargement...",
+    "email": "Email",
+    "password": "Mot de passe",
+    "username": "Nom d'utilisateur"
+  },
+  "footer": {
+    "terms": "Conditions d'utilisation",
+    "privacy": "Politique de confidentialité",
+    "createdBy": "Créé par {{names}} © {{year}}"
+  },
+  "login": {
+    "title": "Bonjour !",
+    "subtitle": "Connectez-vous à votre compte ici.",
+    "google": "Continuer avec Google",
+    "emailPlaceholder": "Email ou nom d'utilisateur",
+    "forgot": "Mot de passe oublié ?",
+    "submit": "Se connecter",
+    "submitting": "Connexion...",
+    "switch": "Pas encore de compte ?",
+    "switchCta": "S'inscrire !",
+    "failed": "Échec de la connexion"
+  },
+  "register": {
+    "title": "Bonjour !",
+    "subtitle": "Créez votre compte ici.",
+    "google": "Continuer avec Google",
+    "emailPlaceholder": "Email",
+    "usernamePlaceholder": "Nom d'utilisateur",
+    "passwordPlaceholder": "Mot de passe",
+    "submit": "S'inscrire",
+    "submitting": "Création...",
+    "switch": "Déjà un compte ?",
+    "switchCta": "Se connecter",
+    "failed": "Échec de l'inscription"
+  },
+  "verify": {
+    "title": "Vérifiez votre email",
+    "subtitle": "Nous devons confirmer votre email avant que vous puissiez accéder à l'application.",
+    "resent": "Email de vérification envoyé.",
+    "resend": "Renvoyer l'email de vérification",
+    "resending": "Envoi...",
+    "cta": "J'ai vérifié mon email"
+  },
+  "main": {
+    "search": "Cherchez votre jeu",
+    "recentBets": "Paris récents",
+    "realtime": "Temps réel",
+    "game": "Jeu",
+    "user": "Utilisateur",
+    "time": "Temps",
+    "betAmount": "Montant du pari",
+    "multiplier": "Multiplicateur",
+    "payout": "Paiement",
+    "waiting": "En attente des données en temps réel…",
+    "players": "joueurs",
+    "playersOnline": "joueurs en ligne",
+    "modeSolo": "Solo",
+    "modeBot": "Vs un bot",
+    "modeOnline": "Vs un joueur en ligne",
+    "launch": "Lancer",
+    "profile": "Aller au profil",
+    "coins": "Coins"
+  },
+  "auth": {
+    "loggedIn": "Connecté",
+    "welcome": "Bon retour, {{name}} !",
+    "subtitle": "Vous êtes connecté et prêt à partir.",
+    "userId": "ID utilisateur",
+    "emailVerification": "Vérification email",
+    "verified": "Vérifié",
+    "notVerified": "Non vérifié",
+    "dashboard": "Aller au tableau de bord",
+    "profile": "Voir le profil"
+  },
+  "languages": {
+    "en": "Anglais",
+    "fr": "Français",
+    "ar": "Arabe"
+  },
+  "profile": {
+    "back": "Retour",
+    "userId": "ID utilisateur",
+    "coins": "Coins",
+    "emailVerification": "Vérification email",
+    "verified": "Vérifié",
+    "notVerified": "Non vérifié",
+    "language": "Langue",
+    "languageTitle": "Changer les paramètres",
+    "edit": "Modifier le profil",
+    "editTitle": "Modifier le profil",
+    "editSubtitle": "Mettre à jour vos informations",
+    "avatar": "Photo de profil",
+    "avatarPlaceholder": "Collez l'URL de l'image",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "saved": "Profil mis à jour.",
+    "changePfp": "Changer l'avatar",
+    "avatarUpdated": "Photo de profil mise à jour.",
+    "avatarError": "Impossible de mettre à jour la photo de profil.",
+    "logout": "Se déconnecter"
+  }
+}

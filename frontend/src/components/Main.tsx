@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import type { User } from '../types/auth';
 
 interface Game {
@@ -11,6 +12,7 @@ interface Game {
 
 interface MainProps {
   user: User;
+  onOpenProfile: () => void;
 }
 
 interface BetRow {
@@ -24,7 +26,8 @@ interface BetRow {
   payoutPositive: boolean;
 }
 
-export default function Main({ user }: MainProps) {
+export default function Main({ user, onOpenProfile }: MainProps) {
+  const { t } = useTranslation();
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
   const [selectedMode, setSelectedMode] = useState<'solo' | 'bot' | 'online' | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -98,7 +101,8 @@ export default function Main({ user }: MainProps) {
           <h1 className="logo">ft_gambling</h1>
         </div>
         <div className="header-right">
-          <button className="profile-btn" title="Aller au profil">
+          <div className="coins-pill">$ {Number(user.coins ?? 0).toLocaleString()}</div>
+          <button className="profile-btn" title={t('main.profile')} onClick={onOpenProfile}>
             {user.avatarUrl ? (
               <img className="profile-avatar" src={user.avatarUrl} alt={user.username} />
             ) : (
@@ -113,7 +117,7 @@ export default function Main({ user }: MainProps) {
       <div className="search-bar">
         <input
           type="text"
-          placeholder="Cherchez votre jeu"
+          placeholder={t('main.search')}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="search-input"
@@ -132,7 +136,9 @@ export default function Main({ user }: MainProps) {
                 >
                   <img src={game.image} alt={game.name} loading="lazy" />
                 </div>
-                <p className="players-count">🟢 {game.players.toLocaleString()} joueurs</p>
+                <p className="players-count">
+                  🟢 {game.players.toLocaleString()} {t('main.players')}
+                </p>
               </div>
             ))}
           </div>
@@ -142,22 +148,22 @@ export default function Main({ user }: MainProps) {
       <section className="activity-section">
         <div className="activity-card">
           <div className="activity-header">
-            <h2>Paris récents</h2>
-            <span className="activity-subtitle">Temps réel</span>
+            <h2>{t('main.recentBets')}</h2>
+            <span className="activity-subtitle">{t('main.realtime')}</span>
           </div>
 
           <div className="activity-table">
             <div className="activity-row activity-head">
-              <div className="activity-cell">Jeu</div>
-              <div className="activity-cell">Utilisateur</div>
-              <div className="activity-cell">Temps</div>
-              <div className="activity-cell">Montant du pari</div>
-              <div className="activity-cell">Multiplicateur</div>
-              <div className="activity-cell">Paiement</div>
+              <div className="activity-cell">{t('main.game')}</div>
+              <div className="activity-cell">{t('main.user')}</div>
+              <div className="activity-cell">{t('main.time')}</div>
+              <div className="activity-cell">{t('main.betAmount')}</div>
+              <div className="activity-cell">{t('main.multiplier')}</div>
+              <div className="activity-cell">{t('main.payout')}</div>
             </div>
 
             {recentBets.length === 0 ? (
-              <div className="activity-empty">En attente des données en temps réel…</div>
+              <div className="activity-empty">{t('main.waiting')}</div>
             ) : (
               recentBets.map((row) => (
                 <div key={row.id} className="activity-row">
@@ -182,29 +188,31 @@ export default function Main({ user }: MainProps) {
             <button className="close-btn" onClick={closeGameModal}>×</button>
             <div className="modal-info">
               <h2>{selectedGame.name}</h2>
-              <p className="modal-players">{selectedGame.players.toLocaleString()} joueurs en ligne</p>
+              <p className="modal-players">
+                {selectedGame.players.toLocaleString()} {t('main.playersOnline')}
+              </p>
               <div className="mode-selector">
                 <button
                   className={`mode-btn ${selectedMode === 'solo' ? 'active' : ''}`}
                   onClick={() => setSelectedMode('solo')}
                 >
-                  Solo
+                  {t('main.modeSolo')}
                 </button>
                 <button
                   className={`mode-btn ${selectedMode === 'bot' ? 'active' : ''}`}
                   onClick={() => setSelectedMode('bot')}
                 >
-                  Vs un bot
+                  {t('main.modeBot')}
                 </button>
                 <button
                   className={`mode-btn ${selectedMode === 'online' ? 'active' : ''}`}
                   onClick={() => setSelectedMode('online')}
                 >
-                  Vs un joueur en ligne
+                  {t('main.modeOnline')}
                 </button>
               </div>
               <button className="play-now-btn" onClick={launchGame} disabled={!selectedMode}>
-                Lancer
+                {t('main.launch')}
               </button>
             </div>
           </div>
@@ -257,6 +265,23 @@ export default function Main({ user }: MainProps) {
         .header-right {
           display: flex;
           align-items: center;
+          gap: 12px;
+        }
+
+        .coins-pill {
+          padding: 8px 12px;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          border-radius: 999px;
+          font-size: 13px;
+          font-weight: 700;
+          color: #e7eef7;
+          letter-spacing: 0.3px;
+          text-transform: uppercase;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 70px;
         }
 
         .profile-btn {

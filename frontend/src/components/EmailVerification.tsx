@@ -1,15 +1,13 @@
 import { useState } from 'react';
-import type { User } from '../types/auth';
+import { useTranslation } from 'react-i18next';
 import { api } from '../services/api';
 
 interface EmailVerificationProps {
-  user: User;
   onRefresh: () => void;
-  onUserUpdate: (user: User) => void;
 }
 
-export default function EmailVerification({ user, onRefresh, onUserUpdate }: EmailVerificationProps) {
-  const [email, setEmail] = useState(user.email);
+export default function EmailVerification({ onRefresh }: EmailVerificationProps) {
+  const { t } = useTranslation();
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -24,27 +22,7 @@ export default function EmailVerification({ user, onRefresh, onUserUpdate }: Ema
     if (result.error) {
       setError(result.error);
     } else {
-      setMessage('Verification email sent.');
-    }
-
-    setLoading(false);
-  };
-
-  const handleChangeEmail = async (event: React.SyntheticEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    setError('');
-    setMessage('');
-
-    const result = await api.updateEmail(email);
-
-    if (result.error) {
-      setError(result.error);
-    } else if (result.user) {
-      onUserUpdate(result.user);
-      setMessage('Email updated. Please verify your new email.');
-    } else {
-      setMessage('Email updated.');
+      setMessage(t('verify.resent'));
     }
 
     setLoading(false);
@@ -53,9 +31,9 @@ export default function EmailVerification({ user, onRefresh, onUserUpdate }: Ema
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1>Verify your email</h1>
+        <h1>{t('verify.title')}</h1>
         <p className="auth-subtitle">
-          We need to confirm your email before you can access the app.
+          {t('verify.subtitle')}
         </p>
 
         {message && <div className="info-message">{message}</div>}
@@ -67,33 +45,11 @@ export default function EmailVerification({ user, onRefresh, onUserUpdate }: Ema
           onClick={handleResend}
           disabled={loading}
         >
-          {loading ? 'Sending...' : 'Resend verification email'}
+          {loading ? t('verify.resending') : t('verify.resend')}
         </button>
 
-        <div className="divider">
-          <span>or</span>
-        </div>
-
-        <form onSubmit={handleChangeEmail} className="verify-form">
-          <div className="form-group">
-            <label className="sr-only" htmlFor="email">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="Email"
-              required
-              disabled={loading}
-            />
-          </div>
-          <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'Updating...' : 'Change email'}
-          </button>
-        </form>
-
         <button type="button" className="secondary-btn" onClick={onRefresh} disabled={loading}>
-          I have verified my email
+          {t('verify.cta')}
         </button>
       </div>
     </div>

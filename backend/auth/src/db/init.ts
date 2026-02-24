@@ -26,7 +26,8 @@ db.transaction((): void => {
 			a2f_secret TEXT,
 			created_at TEXT,
 			updated_at TEXT,
-			language TEXT
+			language TEXT,
+			coins INTEGER NOT NULL
 		)
 	`);
 });

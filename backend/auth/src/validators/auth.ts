@@ -12,16 +12,14 @@ export const registerSchema = z.object({
 });
 
 export const updateSchema = z.object({
-	username: z.string().min(3).max(32),
-	avatar_url: z.url(),
+	username: z.string().min(3).max(32).optional(),
+	email: z.email().optional(),
+	avatar_url: z.url().optional(),
 	bio: z.string().optional(),
-	language: z.enum(["en", "fr", "es", "de"]).optional()
-});
-
-export const emailUpdateSchema = z.object({
-	email: z.email()
+	language: z.enum(["en", "fr", "ar", "es", "de"]).optional(),
+	is_active: z.number().optional()
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;
 export type RegisterInput = z.infer<typeof registerSchema>;
-export type EmailUpdateInput = z.infer<typeof emailUpdateSchema>;
+export type UpdateInput = z.infer<typeof updateSchema>

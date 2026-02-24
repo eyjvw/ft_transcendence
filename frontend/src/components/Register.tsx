@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { api } from '../services/api';
 import type { RegisterData } from '../types/auth';
 
@@ -8,6 +9,7 @@ interface RegisterProps {
 }
 
 export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<RegisterData>({
     username: '',
     email: '',
@@ -29,7 +31,7 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
     } else if (result.success) {
       onSuccess();
     } else {
-      setError('Registration failed');
+      setError(t('register.failed'));
       setLoading(false);
     }
   };
@@ -37,18 +39,18 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h1>Hello!</h1>
-        <p className="auth-subtitle">Create your account here.</p>
+        <h1>{t('register.title')}</h1>
+        <p className="auth-subtitle">{t('register.subtitle')}</p>
 
         <div className="oauth-section">
           <button type="button" className="oauth-btn google-btn">
             <span className="oauth-icon">G</span>
-            Continue with Google
+            {t('register.google')}
           </button>
         </div>
 
         <div className="divider">
-          <span>or</span>
+          <span>{t('common.or')}</span>
         </div>
 
         <form onSubmit={handleSubmit}>
@@ -57,7 +59,7 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
             <input
               id="username"
               type="text"
-              placeholder="Username"
+              placeholder={t('register.usernamePlaceholder')}
               value={formData.username}
               onChange={(e) => setFormData({ ...formData, username: e.target.value })}
               required
@@ -72,7 +74,7 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
             <input
               id="email"
               type="email"
-              placeholder="Email"
+              placeholder={t('register.emailPlaceholder')}
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               required
@@ -85,7 +87,7 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
             <input
               id="password"
               type="password"
-              placeholder="Password"
+              placeholder={t('register.passwordPlaceholder')}
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               required
@@ -97,14 +99,14 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
           {error && <div className="error-message">{error}</div>}
 
           <button type="submit" className="submit-btn" disabled={loading}>
-            {loading ? 'Creating...' : 'Sign up'}
+            {loading ? t('register.submitting') : t('register.submit')}
           </button>
         </form>
 
         <p className="switch-auth">
-          Already have an account?{' '}
+          {t('register.switch')}{' '}
           <button onClick={onSwitchToLogin} className="link-btn">
-            Sign in
+            {t('register.switchCta')}
           </button>
         </p>
       </div>
