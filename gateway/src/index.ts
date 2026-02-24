@@ -1,5 +1,7 @@
+import type { RateLimitResult } from "./types/ratelimit_result.ts";
 import { StatusCode } from "./types/status_code.ts";
-import { applyRateLimitHeaders, checkRateLimit, getClientId } from "./ratelimit/limiter.ts";
+import { applyRateLimitHeaders, checkRateLimit, getClientId } from "./waf/ratelimit/limiter.ts";
+import { detectInjection } from "./waf/sql/detect.ts";
 
 const server: Bun.Server<undefined> = Bun.serve({
 	port: Number(Bun.env.PORT),
@@ -20,8 +22,8 @@ const server: Bun.Server<undefined> = Bun.serve({
 		}
 
 		const url: URL = new URL(req.url);
-		const isWebsocketRoute = url.pathname.startsWith("/ws");
-		const rateLimitResult = isWebsocketRoute ? null : checkRateLimit(getClientId(req));
+		const isWebsocketRoute: boolean = url.pathname.startsWith("/ws");
+		const rateLimitResult: RateLimitResult | null = isWebsocketRoute ? null : checkRateLimit(getClientId(req));
 
 		if (rateLimitResult && !rateLimitResult.allowed)
 		{
@@ -35,6 +37,9 @@ const server: Bun.Server<undefined> = Bun.serve({
 
 			return new Response("Too Many Requests", { status: StatusCode.TOO_MANY_REQUESTS, headers });
 		}
+
+		if (detectInjection(url.search))
+			return new Response("Forbidden", { status: StatusCode.FORBIDDEN });
 
 		let target: string = "";
 

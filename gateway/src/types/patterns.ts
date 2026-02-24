@@ -1,0 +1,1 @@
+export const forbiddenPatterns: Array<RegExp> = [/<script.*?>/i, /(union\s+select)/i, /(\-\-|\#)/];

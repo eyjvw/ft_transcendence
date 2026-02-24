@@ -12,6 +12,7 @@ type View = 'loading' | 'login' | 'register' | 'verify-email' | 'authenticated';
 function App() {
   const [view, setView] = useState<View>('loading');
   const [user, setUser] = useState<User | null>(null);
+  const year = new Date().getFullYear();
 
   const checkAuth = async () => {
     const result = await api.me();
@@ -35,44 +36,54 @@ function App() {
     checkAuth();
   };
 
+  let content: JSX.Element;
+
   if (view === 'loading') {
-    return (
+    content = (
       <div className="auth-container">
         <div className="auth-card">
           <h1>Chargement...</h1>
         </div>
       </div>
     );
-  }
-
-  if (view === 'authenticated' && user) {
-    return <Main user={user} />;
-  }
-
-  if (view === 'verify-email' && user) {
-    return (
+  } else if (view === 'authenticated' && user) {
+    content = <Main user={user} />;
+  } else if (view === 'verify-email' && user) {
+    content = (
       <EmailVerification
         user={user}
         onRefresh={checkAuth}
         onUserUpdate={(updatedUser) => setUser(updatedUser)}
       />
     );
-  }
-
-  if (view === 'register') {
-    return (
+  } else if (view === 'register') {
+    content = (
       <Register
         onSuccess={handleAuthSuccess}
         onSwitchToLogin={() => setView('login')}
       />
     );
+  } else {
+    content = (
+      <Login
+        onSuccess={handleAuthSuccess}
+        onSwitchToRegister={() => setView('register')}
+      />
+    );
   }
 
   return (
-    <Login
-      onSuccess={handleAuthSuccess}
-      onSwitchToRegister={() => setView('register')}
-    />
+    <div className="app-shell">
+      <div className="app-content">{content}</div>
+      <footer className="app-footer">
+        <div className="footer-links">
+          <a href="/terms" className="footer-link">Terms of Service</a>
+          <span className="footer-separator">•</span>
+          <a href="/privacy" className="footer-link">Privacy Policy</a>
+        </div>
+        <div className="footer-credits">Created by xxx, yyy, zzz © {year}</div>
+      </footer>
+    </div>
   );
 }
 

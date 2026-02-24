@@ -5,6 +5,57 @@
   text-align: center;
 }
 
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 16px 28px;
+  color: rgba(231, 238, 247, 0.7);
+  font-size: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 18, 30, 0.8);
+  backdrop-filter: blur(10px);
+}
+
+.footer-links {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-link {
+  color: rgba(231, 238, 247, 0.8);
+  text-decoration: none;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.footer-link:hover {
+  color: #8cc2ff;
+}
+
+.footer-separator {
+  color: rgba(231, 238, 247, 0.35);
+}
+
+.footer-credits {
+  font-weight: 600;
+  color: rgba(231, 238, 247, 0.6);
+}
+
 body {
   margin: 0;
   display: flex;

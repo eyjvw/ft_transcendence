@@ -1,6 +1,8 @@
-import { createTransport } from "nodemailer";
+import { createTransport, type Transporter } from "nodemailer";
 
-export const transporter = createTransport({
+import type SMTPPool from "nodemailer/lib/smtp-pool";
+
+export const transporter: Transporter<SMTPPool.SentMessageInfo, SMTPPool.Options> = createTransport({
 	host: "",
 	port: 587,
 	secure: false,
@@ -11,4 +13,4 @@ export const transporter = createTransport({
 		user: Bun.env.MAIL_USER,
 		pass: Bun.env.MAIL_PASS
 	}
-})
+});

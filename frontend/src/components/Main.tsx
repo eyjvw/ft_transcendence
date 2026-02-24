@@ -26,6 +26,7 @@ interface BetRow {
 
 export default function Main({ user }: MainProps) {
   const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+  const [selectedMode, setSelectedMode] = useState<'solo' | 'bot' | 'online' | null>(null);
   const [mounted, setMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [recentBets] = useState<BetRow[]>([]);
@@ -71,6 +72,25 @@ export default function Main({ user }: MainProps) {
     return null;
   }
 
+  const openGameModal = (game: Game) => {
+    setSelectedGame(game);
+    setSelectedMode(null);
+  };
+
+  const closeGameModal = () => {
+    setSelectedGame(null);
+    setSelectedMode(null);
+  };
+
+  const launchGame = () => {
+    if (!selectedGame || !selectedMode) {
+      return;
+    }
+    // TODO: branch to the actual game route / lobby / socket flow
+    // For now, just close the modal after mode selection.
+    closeGameModal();
+  };
+
   return (
     <div className="stake-container">
       <header className="stake-header">
@@ -108,7 +128,7 @@ export default function Main({ user }: MainProps) {
                 <div
                   className="game-card-stake"
                   style={{ background: game.background }}
-                  onClick={() => setSelectedGame(game)}
+                  onClick={() => openGameModal(game)}
                 >
                   <img src={game.image} alt={game.name} loading="lazy" />
                 </div>
@@ -157,14 +177,35 @@ export default function Main({ user }: MainProps) {
       </section>
 
       {selectedGame && (
-        <div className="modal-overlay" onClick={() => setSelectedGame(null)}>
+        <div className="modal-overlay" onClick={closeGameModal}>
           <div className="modal-stake" onClick={(e) => e.stopPropagation()}>
-            <button className="close-btn" onClick={() => setSelectedGame(null)}>×</button>
-            <img src={selectedGame.image} alt={selectedGame.name} className="modal-img" />
+            <button className="close-btn" onClick={closeGameModal}>×</button>
             <div className="modal-info">
               <h2>{selectedGame.name}</h2>
               <p className="modal-players">{selectedGame.players.toLocaleString()} joueurs en ligne</p>
-              <button className="play-now-btn">Jouez maintenant</button>
+              <div className="mode-selector">
+                <button
+                  className={`mode-btn ${selectedMode === 'solo' ? 'active' : ''}`}
+                  onClick={() => setSelectedMode('solo')}
+                >
+                  Solo
+                </button>
+                <button
+                  className={`mode-btn ${selectedMode === 'bot' ? 'active' : ''}`}
+                  onClick={() => setSelectedMode('bot')}
+                >
+                  Vs un bot
+                </button>
+                <button
+                  className={`mode-btn ${selectedMode === 'online' ? 'active' : ''}`}
+                  onClick={() => setSelectedMode('online')}
+                >
+                  Vs un joueur en ligne
+                </button>
+              </div>
+              <button className="play-now-btn" onClick={launchGame} disabled={!selectedMode}>
+                Lancer
+              </button>
             </div>
           </div>
         </div>
@@ -476,22 +517,15 @@ export default function Main({ user }: MainProps) {
           background: rgba(18, 29, 42, 0.95);
           border-radius: 16px;
           overflow: hidden;
-          max-width: 600px;
+          max-width: 420px;
           width: 100%;
           position: relative;
           border: 1px solid rgba(255, 255, 255, 0.08);
           box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
         }
 
-        .modal-img {
-          width: 100%;
-          height: 300px;
-          object-fit: cover;
-          display: block;
-        }
-
         .modal-info {
-          padding: 32px;
+          padding: 28px;
           text-align: center;
         }
 
@@ -524,9 +558,49 @@ export default function Main({ user }: MainProps) {
           letter-spacing: 1px;
         }
 
+        .play-now-btn:disabled {
+          opacity: 0.55;
+          cursor: not-allowed;
+          transform: none;
+          box-shadow: none;
+        }
+
         .play-now-btn:hover {
           transform: scale(1.02);
           box-shadow: 0 12px 32px rgba(26, 115, 232, 0.35);
+        }
+
+        .mode-selector {
+          display: grid;
+          gap: 12px;
+          margin: 20px 0 24px 0;
+        }
+
+        .mode-btn {
+          width: 100%;
+          padding: 12px 14px;
+          border-radius: 10px;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.04);
+          color: #e7eef7;
+          font-weight: 700;
+          font-size: 14px;
+          text-transform: uppercase;
+          letter-spacing: 0.8px;
+          cursor: pointer;
+          transition: all 0.25s ease;
+        }
+
+        .mode-btn:hover {
+          border-color: rgba(26, 115, 232, 0.6);
+          box-shadow: 0 10px 24px rgba(26, 115, 232, 0.2);
+          transform: translateY(-2px);
+        }
+
+        .mode-btn.active {
+          background: rgba(26, 115, 232, 0.2);
+          border-color: rgba(26, 115, 232, 0.8);
+          color: #ffffff;
         }
 
         .close-btn {
@@ -538,9 +612,9 @@ export default function Main({ user }: MainProps) {
           color: #fff;
           font-size: 32px;
           cursor: pointer;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
+          width: 36px;
+          height: 36px;
+          border-radius: 999px;
           transition: all 0.3s ease;
           z-index: 10;
           display: flex;
