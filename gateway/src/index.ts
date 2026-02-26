@@ -5,21 +5,17 @@ import { detectInjection } from "./waf/sql/detect.ts";
 import type { RateLimitResult } from "./types/ratelimit_result.ts";
 
 function applyCors(req: Request, headers: Headers = new Headers()): Headers {
-    const requestOrigin = req.headers.get("Origin");
-    const allowedOrigin = Bun.env.FRONTEND_ORIGIN;
+    const requestOrigin: string | null = req.headers.get("Origin");
+    const allowedOrigin: string | undefined = Bun.env.FRONTEND_ORIGIN;
 
-    // Autorise uniquement l'origine exacte définie dans .env
-    if (requestOrigin && allowedOrigin && requestOrigin === allowedOrigin) {
+    if (requestOrigin && allowedOrigin && requestOrigin === allowedOrigin)
+    {
         headers.set("Access-Control-Allow-Origin", requestOrigin);
         headers.set("Access-Control-Allow-Credentials", "true");
     }
 
     headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    headers.set(
-        "Access-Control-Allow-Headers",
-        req.headers.get("Access-Control-Request-Headers") ??
-        "Content-Type, Authorization"
-    );
+    headers.set("Access-Control-Allow-Headers", req.headers.get("Access-Control-Request-Headers") ?? "Content-Type, Authorization");
     headers.set("Access-Control-Expose-Headers", "Set-Cookie");
     headers.set("Vary", "Origin");
 
@@ -28,31 +24,24 @@ function applyCors(req: Request, headers: Headers = new Headers()): Headers {
 
 const server: Bun.Server<undefined> = Bun.serve({
     port: Number(Bun.env.PORT),
-
     async fetch(req: Request): Promise<Response> {
         try {
             const url: URL = new URL(req.url);
 
-            // =========================
-            // PREFLIGHT (OPTIONS)
-            // =========================
-            if (req.method === "OPTIONS") {
+            if (req.method === "OPTIONS")
+            {
                 return new Response(null, {
                     status: StatusCode.NO_CONTENT ?? 204,
                     headers: applyCors(req)
                 });
             }
 
-            // =========================
-            // RATE LIMIT
-            // =========================
-            const isWebsocketRoute = url.pathname.startsWith("/ws");
+            const isWebsocketRoute: boolean = url.pathname.startsWith("/ws");
+            const rateLimitResult: RateLimitResult | null = isWebsocketRoute ? null : checkRateLimit(getClientId(req));
 
-            const rateLimitResult: RateLimitResult | null =
-                isWebsocketRoute ? null : checkRateLimit(getClientId(req));
-
-            if (rateLimitResult && !rateLimitResult.allowed) {
-                const headers = applyCors(req);
+            if (rateLimitResult && !rateLimitResult.allowed)
+            {
+                const headers: Headers = applyCors(req);
                 applyRateLimitHeaders(headers, rateLimitResult);
 
                 return new Response("Too Many Requests", {
@@ -61,19 +50,14 @@ const server: Bun.Server<undefined> = Bun.serve({
                 });
             }
 
-            // =========================
-            // BASIC INJECTION FILTER
-            // =========================
-            if (detectInjection(url.search)) {
+            if (detectInjection(url.search))
+            {
                 return new Response("Forbidden", {
                     status: StatusCode.FORBIDDEN ?? 403,
                     headers: applyCors(req)
                 });
             }
 
-            // =========================
-            // ROUTING
-            // =========================
             let target: string | undefined;
 
             if (url.pathname.startsWith("/api/auth"))
@@ -81,23 +65,20 @@ const server: Bun.Server<undefined> = Bun.serve({
             else if (url.pathname.startsWith("/api/games"))
                 target = Bun.env.GAMES_ROUTE;
             else if (url.pathname.startsWith("/ws")) {
-                // WebSocket proxy direct
                 return Bun.fetch(
                     Bun.env.WS_ROUTE! + url.pathname + url.search,
                     req
                 );
             }
 
-            if (!target) {
+            if (!target)
+            {
                 return new Response("Not Found", {
                     status: StatusCode.NOT_FOUND ?? 404,
                     headers: applyCors(req)
                 });
             }
 
-            // =========================
-            // UPSTREAM CALL
-            // =========================
             let upstream: Response;
 
             try {
@@ -106,7 +87,7 @@ const server: Bun.Server<undefined> = Bun.serve({
                     headers: req.headers,
                     body: req.body
                 });
-            } catch (err) {
+            } catch (err: unknown) {
                 console.error("Upstream service error:", err);
 
                 return new Response("Upstream service unavailable", {
@@ -115,10 +96,7 @@ const server: Bun.Server<undefined> = Bun.serve({
                 });
             }
 
-            // =========================
-            // COPY HEADERS + APPLY CORS
-            // =========================
-            const headers = applyCors(req, new Headers(upstream.headers));
+            const headers: Headers = applyCors(req, new Headers(upstream.headers));
 
             if (rateLimitResult)
                 applyRateLimitHeaders(headers, rateLimitResult);
@@ -129,7 +107,7 @@ const server: Bun.Server<undefined> = Bun.serve({
                 headers
             });
 
-        } catch (err) {
+        } catch (err: unknown) {
             console.error("Gateway crash:", err);
 
             return new Response("Internal Server Error", {

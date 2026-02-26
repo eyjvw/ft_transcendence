@@ -6,11 +6,11 @@ import { z, type ZodSafeParseResult } from "zod";
 import { eq, or } from "drizzle-orm";
 import { createJWT } from "../jwt/jwt";
 import { StatusCode } from "../types/status_code.ts";
+import { sendEmail } from "../mailer/sendMail.ts";
 
 export async function registerController(req: Request): Promise<Response>
 {
-	try
-	{
+	try {
 		const parsed: ZodSafeParseResult<RegisterInput> = registerSchema.safeParse(await req.json());
 
 		if (!parsed.success)
@@ -21,9 +21,15 @@ export async function registerController(req: Request): Promise<Response>
 
 		if (existingUser.length > 0)
 			return new Response(JSON.stringify({ error: "Email or username already exists" }), { status: StatusCode.BAD_REQUEST });
-		
+
 		const hashed: string = await hash(password, 10);
 		const [newUser]: ({ id: number; username: string; email: string; } | undefined)[] = await db.insert(users).values({ username, email, password_hash: hashed }).returning({ id: users.id, username: users.username, email: users.email });
+
+		try {
+			await sendEmail(email);
+		} catch (err: unknown) {
+			console.error("Erreur lors de l'envoi du mail:", err);
+		}
 
 		return new Response(JSON.stringify({ success: true, user: newUser }), {
 			status: StatusCode.CREATED,
@@ -31,9 +37,7 @@ export async function registerController(req: Request): Promise<Response>
 				"Set-Cookie": `token=${await createJWT(newUser!.id.toString()!)}; HttpOnly; Path=/; SameSite=Lax`
 			}
 		});
-	}
-	catch(err: unknown)
-	{	
+	} catch(err: unknown) {
 		console.error(err);
 		return new Response(JSON.stringify({ error: "Server Error" }), { status: StatusCode.INTERNAL_SERVER_ERROR });
 	}
