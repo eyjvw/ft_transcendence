@@ -24,12 +24,34 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (window.google) {
-      window.google.accounts.id.initialize({
-        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID',
-        callback: handleGoogleResponse,
-      });
-    }
+    const renderGoogleButton = () => {
+      const btnContainer = document.getElementById('google-btn-container');
+      if (btnContainer && window.google && window.google.accounts) {
+        window.google.accounts.id.initialize({
+          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID',
+          callback: handleGoogleResponse,
+        });
+        
+        window.google.accounts.id.renderButton(btnContainer, {
+          theme: 'outline',
+          size: 'large',
+          width: btnContainer.clientWidth || 380,
+          text: 'continue_with',
+          shape: 'rectangular',
+        });
+        return true;
+      }
+      return false;
+    };
+
+    // Polling because the script or the DOM element might not be ready
+    const interval = setInterval(() => {
+      if (renderGoogleButton()) {
+        clearInterval(interval);
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleGoogleResponse = async (response: any) => {
@@ -42,14 +64,6 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
     } else {
       setError(result.error || 'Google login failed');
       setLoading(false);
-    }
-  };
-
-  const handleGoogleClick = () => {
-    if (window.google) {
-      window.google.accounts.id.prompt();
-    } else {
-      setError('Google login not available');
     }
   };
 
@@ -78,15 +92,7 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
         <p className="auth-subtitle">{t('login.subtitle')}</p>
 
         <div className="oauth-section">
-          <button 
-            type="button" 
-            className="oauth-btn google-btn"
-            onClick={handleGoogleClick}
-            disabled={loading}
-          >
-            <span className="oauth-icon">G</span>
-            {t('login.google')}
-          </button>
+          <div id="google-btn-container" style={{ width: '100%', minHeight: '40px' }}></div>
         </div>
 
         <div className="divider">

@@ -19,12 +19,33 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (window.google) {
-      window.google.accounts.id.initialize({
-        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID',
-        callback: handleGoogleResponse,
-      });
-    }
+    const renderGoogleButton = () => {
+      const btnContainer = document.getElementById('google-btn-container-reg');
+      if (btnContainer && window.google && window.google.accounts) {
+        window.google.accounts.id.initialize({
+          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID',
+          callback: handleGoogleResponse,
+        });
+        
+        window.google.accounts.id.renderButton(btnContainer, {
+          theme: 'outline',
+          size: 'large',
+          width: btnContainer.clientWidth || 380,
+          text: 'signup_with',
+          shape: 'rectangular',
+        });
+        return true;
+      }
+      return false;
+    };
+
+    const interval = setInterval(() => {
+      if (renderGoogleButton()) {
+        clearInterval(interval);
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
   }, []);
 
   const handleGoogleResponse = async (response: any) => {
@@ -37,14 +58,6 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
     } else {
       setError(result.error || 'Google login failed');
       setLoading(false);
-    }
-  };
-
-  const handleGoogleClick = () => {
-    if (window.google) {
-      window.google.accounts.id.prompt();
-    } else {
-      setError('Google login not available');
     }
   };
 
@@ -73,15 +86,7 @@ export default function Register({ onSuccess, onSwitchToLogin }: RegisterProps) 
         <p className="auth-subtitle">{t('register.subtitle')}</p>
 
         <div className="oauth-section">
-          <button 
-            type="button" 
-            className="oauth-btn google-btn"
-            onClick={handleGoogleClick}
-            disabled={loading}
-          >
-            <span className="oauth-icon">G</span>
-            {t('register.google')}
-          </button>
+          <div id="google-btn-container-reg" style={{ width: '100%', minHeight: '40px' }}></div>
         </div>
 
         <div className="divider">
