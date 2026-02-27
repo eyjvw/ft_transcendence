@@ -1,7 +1,8 @@
 import type { Bucket } from "../../types/bucket.ts";
 import type { RateLimitResult } from "../../types/ratelimit_result.ts";
 
-function getNumber(value: string | undefined, fallback: number): number {
+function getNumber(value: string | undefined, fallback: number): number
+{
 	const parsed = Number(value);
 	return Number.isFinite(parsed) ? parsed : fallback;
 }

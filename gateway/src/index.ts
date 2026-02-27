@@ -4,7 +4,8 @@ import { detectInjection } from "./waf/sql/detect.ts";
 
 import type { RateLimitResult } from "./types/ratelimit_result.ts";
 
-function applyCors(req: Request, headers: Headers = new Headers()): Headers {
+function applyCors(req: Request, headers: Headers = new Headers()): Headers
+{
     const requestOrigin: string | null = req.headers.get("Origin");
     const allowedOrigin: string | undefined = Bun.env.FRONTEND_ORIGIN;
 
@@ -91,7 +92,7 @@ const server: Bun.Server<undefined> = Bun.serve({
                 console.error("Upstream service error:", err);
 
                 return new Response("Upstream service unavailable", {
-                    status: 502,
+                    status: StatusCode.BAD_GATEWAY,
                     headers: applyCors(req)
                 });
             }
@@ -116,6 +117,11 @@ const server: Bun.Server<undefined> = Bun.serve({
             });
         }
     }
+});
+
+process.on("SIGTERM", (): void => {
+    server.stop();
+    process.exit(0);
 });
 
 console.log(`Gateway running on port ${server.port}`);

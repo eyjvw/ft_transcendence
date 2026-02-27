@@ -119,13 +119,27 @@ export default function Profile({
           {t('profile.back')}
         </button>
         <div className="profile-identity">
-          <label className="profile-avatar-upload" htmlFor="profile-avatar-input">
+          <label className="profile-avatar-upload" htmlFor="profile-avatar-input" style={{ position: 'relative' }}>
             {avatarPreview ? (
               <img className="profile-avatar-lg" src={avatarPreview} alt={user.username} />
             ) : (
               <div className="profile-avatar-lg profile-avatar-lg--placeholder">
                 {user.username.slice(0, 1).toUpperCase()}
               </div>
+            )}
+            {user.isActive && (
+              <span style={{
+                position: 'absolute',
+                bottom: '8%',
+                right: '8%',
+                width: '18px',
+                height: '18px',
+                backgroundColor: '#44b700',
+                border: '3px solid #121d2a',
+                borderRadius: '50%',
+                boxShadow: '0 0 10px rgba(68, 183, 0, 0.4)',
+                zIndex: 5
+              }} title="Online"></span>
             )}
             <span className="profile-avatar-overlay">{t('profile.changePfp')}</span>
             <input
@@ -155,12 +169,6 @@ export default function Profile({
           </div>
         </div>
         <div className="profile-row">
-          <div>
-            <p className="profile-label">{t('profile.emailVerification')}</p>
-            <p className="profile-value">
-              {!user.isActive ? t('profile.verified') : t('profile.notVerified')}
-            </p>
-          </div>
           <div>
             <p className="profile-label">{t('profile.language')}</p>
             <p className="profile-value">{t(`languages.${currentLanguage}`)}</p>

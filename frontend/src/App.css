@@ -1,3 +1,31 @@
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 18, 30, 0.85); /* Slightly darker for better focus */
+  display: grid; /* Grid is often even better for centering */
+  place-items: center;
+  z-index: 2000;
+  backdrop-filter: blur(8px);
+}
+
+.modal-content {
+  background: #121d2a;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2.5rem;
+  width: 90%;
+  max-width: 440px;
+  position: relative;
+  overflow-y: auto;
+  color: #e7eef7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
 #root {
   width: 100%;
   margin: 0;
@@ -320,7 +348,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 100%;
+  flex: 1;
   width: 100%;
   padding: 2rem 1rem;
 }

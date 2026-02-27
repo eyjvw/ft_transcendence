@@ -1,17 +1,7 @@
-import { loginController } from "./controllers/login.ts";
-import { logoutController } from "./controllers/logout.ts";
-import { meController } from "./controllers/me.ts";
-import { updateProfileController } from "./controllers/profile.ts";
-import { registerController } from "./controllers/register.ts";
 import { StatusCode } from "./types/status_code.ts";
 
 const routes: Record<string, (req: Request) => Promise<Response>> = {
-	"GET:/api/auth/me": meController,
-	"PUT:/api/auth/profile": updateProfileController,
-	"POST:/api/auth/logout": logoutController,
 
-	"POST:/api/auth/login": loginController,
-	"POST:/api/auth/register": registerController,
 }
 
 const server: Bun.Server<undefined> = Bun.serve({
@@ -27,8 +17,8 @@ const server: Bun.Server<undefined> = Bun.serve({
 });
 
 process.on("SIGTERM", (): void => {
-    server.stop();
-    process.exit(0);
+	server.stop();
+	process.exit(0);
 });
 
-console.log(`Auth running on ${server.port}`);
+console.log(`Social running on ${server.port}`);

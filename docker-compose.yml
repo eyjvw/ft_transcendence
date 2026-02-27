@@ -41,6 +41,20 @@ services:
     volumes:
       - ./backend/auth/src:/app/src
       - sqlite-data:/app/data
+  
+  social:
+    build:
+      context: .
+      dockerfile: backend/social/Dockerfile
+    container_name: app_social
+    ports:
+      - "4001:4001"
+    env_file:
+      - ./backend/social/.env
+    command: bun run src/index.ts
+    volumes:
+      - ./backend/social/src:/app/src
+      - sqlite-data:/app/data
 
 volumes:
   sqlite-data:

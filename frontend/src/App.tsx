@@ -4,12 +4,11 @@ import './App.css';
 import Login from './components/Login';
 import Register from './components/Register';
 import Main from './components/Main';
-import EmailVerification from './components/EmailVerification';
 import Profile from './components/Profile';
 import { api } from './services/api';
 import type { User } from './types/auth';
 
-type View = 'loading' | 'login' | 'register' | 'verify-email' | 'authenticated' | 'profile';
+type View = 'loading' | 'login' | 'register' | 'authenticated' | 'profile';
 
 function App() {
   const [view, setView] = useState<View>('loading');
@@ -21,11 +20,7 @@ function App() {
     const result = await api.me();
     if (result.user) {
       setUser(result.user);
-      if (result.user.isActive) {
-        setView('authenticated');
-      } else {
-        setView('verify-email');
-      }
+      setView('authenticated');
     } else {
       setView('login');
     }
@@ -65,9 +60,6 @@ function App() {
         onBack={() => setView('authenticated')}
         onUserUpdate={(updatedUser) => {
           setUser(updatedUser);
-          if (!updatedUser.isActive) {
-            setView('verify-email');
-          }
         }}
         onLogout={async () => {
           await api.logout();
@@ -75,12 +67,6 @@ function App() {
           setView('login');
         }}
         currentLanguage={user.language ?? 'en'}
-      />
-    );
-  } else if (view === 'verify-email' && user) {
-    content = (
-      <EmailVerification
-        onRefresh={checkAuth}
       />
     );
   } else if (view === 'register') {

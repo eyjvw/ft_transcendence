@@ -33,6 +33,9 @@ clean:
 fclean: clean
 	docker system prune -af
 
+stop:
+	$(DC) stop
+
 re: fclean build up
 
-.PHONY: all build up down restart rebuild logs ps clean fclean re
+.PHONY: all build up down restart rebuild logs ps clean fclean re stop

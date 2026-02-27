@@ -43,6 +43,12 @@
     "resend": "Resend verification email",
     "resending": "Sending...",
     "cta": "I have verified my email"
+    ,"changeEmail": "Change your email address"
+    ,"newEmail": "New email address"
+    ,"saveEmail": "Save email"
+    ,"cancel": "Cancel"
+    ,"enterNewEmail": "Please enter your new email address below."
+    ,"saving": "Saving..."
   },
   "main": {
     "search": "Search your game",

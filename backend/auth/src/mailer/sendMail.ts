@@ -7,17 +7,13 @@ export async function sendEmail(mail: string)
 	try
 	{
 		await client.transactionalEmails.sendTransacEmail({
-			subject: "Hello",
-			textContent: "Hello world!",
+			subject: "Welcome to ft_gambling",
+			textContent: "Welcome",
 			sender: {
 				name: "ft_gambling",
 				email: "ft.gambling@gmail.com"
 			},
-			to: [
-				{
-					email: mail
-				}
-			]
+			to: [{ email: mail }]
 		});
 	}
 	catch (err: unknown)

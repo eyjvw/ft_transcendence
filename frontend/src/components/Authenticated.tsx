@@ -16,10 +16,39 @@ export default function Authenticated({ user }: AuthenticatedProps) {
           <p className="app-subtitle">{t('auth.subtitle')}</p>
         </div>
         {user.avatarUrl ? (
-          <img className="app-avatar" src={user.avatarUrl} alt={user.username} />
+          <div className="avatar-container" style={{ position: 'relative', display: 'inline-block' }}>
+            <img className="app-avatar" src={user.avatarUrl} alt={user.username} />
+            {user.isActive && (
+              <span style={{
+                position: 'absolute',
+                bottom: '4px',
+                right: '4px',
+                width: '14px',
+                height: '14px',
+                backgroundColor: '#44b700',
+                border: '2px solid #1a2736',
+                borderRadius: '50%',
+                boxShadow: '0 0 8px rgba(68, 183, 0, 0.4)'
+              }} title="Online"></span>
+            )}
+          </div>
         ) : (
-          <div className="app-avatar app-avatar--placeholder">
-            {user.username.slice(0, 1).toUpperCase()}
+          <div className="avatar-container" style={{ position: 'relative', display: 'inline-block' }}>
+            <div className="app-avatar app-avatar--placeholder">
+              {user.username.slice(0, 1).toUpperCase()}
+            </div>
+            {user.isActive && (
+              <span style={{
+                position: 'absolute',
+                bottom: '4px',
+                right: '4px',
+                width: '14px',
+                height: '14px',
+                backgroundColor: '#44b700',
+                border: '2px solid #1a2736',
+                borderRadius: '50%'
+              }} title="Online"></span>
+            )}
           </div>
         )}
       </header>
@@ -39,10 +68,6 @@ export default function Authenticated({ user }: AuthenticatedProps) {
           <div>
             <p className="app-label">{t('auth.userId')}</p>
             <p className="app-value">{user.id}</p>
-          </div>
-          <div>
-            <p className="app-label">{t('auth.emailVerification')}</p>
-            <p className="app-value">{user.isActive ? t('auth.verified') : t('auth.notVerified')}</p>
           </div>
         </div>
       </section>

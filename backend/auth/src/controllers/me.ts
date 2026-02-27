@@ -13,12 +13,12 @@ export async function meController(req: Request): Promise<Response>
 		if (!cookie)
 			return new Response(JSON.stringify({ error: "No Cookie" }), { status: StatusCode.BAD_REQUEST });
 
-		const token = cookie.match(/token=([^;]+)/)?.[1];
+		const token: string | undefined = cookie.match(/token=([^;]+)/)?.[1];
 
 		if (!token)
 			return new Response(JSON.stringify({ error: "Unauthorized" }), { status: StatusCode.UNAUTHORIZED });
 
-		const { uid } = await verifyJWT(token);
+		const { uid }: Record<string, string> = await verifyJWT(token);
 		const user = await db.select().from(users).where(eq(users.id, Number(uid))).limit(1);
 
 		if (user.length < 1)

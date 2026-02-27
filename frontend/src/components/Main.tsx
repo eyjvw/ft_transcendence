@@ -103,13 +103,16 @@ export default function Main({ user, onOpenProfile }: MainProps) {
         <div className="header-right">
           <div className="coins-pill">$ {Number(user.coins ?? 0).toLocaleString()}</div>
           <button className="profile-btn" title={t('main.profile')} onClick={onOpenProfile}>
-            {user.avatarUrl ? (
-              <img className="profile-avatar" src={user.avatarUrl} alt={user.username} />
-            ) : (
-              <div className="profile-avatar placeholder">
-                {user.username.slice(0, 1).toUpperCase()}
-              </div>
-            )}
+            <div className="avatar-container">
+              {user.avatarUrl ? (
+                <img className="profile-avatar" src={user.avatarUrl} alt={user.username} />
+              ) : (
+                <div className="profile-avatar placeholder">
+                  {user.username.slice(0, 1).toUpperCase()}
+                </div>
+              )}
+              {user.isActive && <span className="online-indicator" title="Online"></span>}
+            </div>
           </button>
         </div>
       </header>
@@ -295,6 +298,25 @@ export default function Main({ user, onOpenProfile }: MainProps) {
         .profile-btn:hover .profile-avatar {
           transform: scale(1.08);
           border-color: #66a9ff;
+        }
+
+        .avatar-container {
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .online-indicator {
+          position: absolute;
+          bottom: 2px;
+          right: 2px;
+          width: 12px;
+          height: 12px;
+          background-color: #44b700;
+          border: 2px solid #121d2a;
+          border-radius: 50%;
+          box-shadow: 0 0 8px rgba(68, 183, 0, 0.4);
         }
 
         .profile-avatar {

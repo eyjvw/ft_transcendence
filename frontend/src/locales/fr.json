@@ -43,6 +43,12 @@
     "resend": "Renvoyer l'email de vérification",
     "resending": "Envoi...",
     "cta": "J'ai vérifié mon email"
+    ,"changeEmail": "Changer votre adresse email"
+    ,"newEmail": "Nouvelle adresse email"
+    ,"saveEmail": "Enregistrer l'email"
+    ,"cancel": "Annuler"
+    ,"enterNewEmail": "Veuillez saisir votre nouvelle adresse email ci-dessous."
+    ,"saving": "Enregistrement..."
   },
   "main": {
     "search": "Cherchez votre jeu",
