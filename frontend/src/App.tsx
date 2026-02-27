@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type JSX } from 'react';
 import { useTranslation } from 'react-i18next';
 import './App.css';
 import Login from './components/Login';
@@ -6,6 +6,7 @@ import Register from './components/Register';
 import Main from './components/Main';
 import Profile from './components/Profile';
 import { api } from './services/api';
+
 import type { User } from './types/auth';
 
 type View = 'loading' | 'login' | 'register' | 'authenticated' | 'profile';
@@ -95,7 +96,7 @@ function App() {
           <a href="/privacy" className="footer-link">{t('footer.privacy')}</a>
         </div>
         <div className="footer-credits">
-          {t('footer.createdBy', { names: 'xxx, yyy, zzz', year })}
+          {t('footer.createdBy', { names: 'Samuel, Hoel, Derhen', year })}
         </div>
       </footer>
     </div>

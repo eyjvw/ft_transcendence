@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { api } from '../services/api';
 import type { LoginData } from '../types/auth';
@@ -6,6 +6,12 @@ import type { LoginData } from '../types/auth';
 interface LoginProps {
   onSuccess: () => void;
   onSwitchToRegister: () => void;
+}
+
+declare global {
+  interface Window {
+    google: any;
+  }
 }
 
 export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
@@ -16,6 +22,36 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
   });
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (window.google) {
+      window.google.accounts.id.initialize({
+        client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || 'YOUR_GOOGLE_CLIENT_ID',
+        callback: handleGoogleResponse,
+      });
+    }
+  }, []);
+
+  const handleGoogleResponse = async (response: any) => {
+    setLoading(true);
+    setError('');
+    const result = await api.googleLogin(response.credential);
+    
+    if (result.success) {
+      onSuccess();
+    } else {
+      setError(result.error || 'Google login failed');
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleClick = () => {
+    if (window.google) {
+      window.google.accounts.id.prompt();
+    } else {
+      setError('Google login not available');
+    }
+  };
 
   const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,7 +78,12 @@ export default function Login({ onSuccess, onSwitchToRegister }: LoginProps) {
         <p className="auth-subtitle">{t('login.subtitle')}</p>
 
         <div className="oauth-section">
-          <button type="button" className="oauth-btn google-btn">
+          <button 
+            type="button" 
+            className="oauth-btn google-btn"
+            onClick={handleGoogleClick}
+            disabled={loading}
+          >
             <span className="oauth-icon">G</span>
             {t('login.google')}
           </button>

@@ -68,7 +68,14 @@
     "modeOnline": "Vs an online player",
     "launch": "Launch",
     "profile": "Go to profile",
-    "coins": "Coins"
+    "coins": "Coins",
+    "searchPeople": "Search people...",
+    "friends": "Friends"
+  },
+  "social": {
+    "searchPlaceholder": "Search by username...",
+    "addFriend": "Add Friend",
+    "friendsList": "Friends List"
   },
   "auth": {
     "loggedIn": "Logged in",

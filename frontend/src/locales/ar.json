@@ -68,7 +68,14 @@
     "modeOnline": "ضد لاعب عبر الإنترنت",
     "launch": "ابدأ",
     "profile": "الملف الشخصي",
-    "coins": "عملات"
+    "coins": "عملات",
+    "searchPeople": "بحث عن أشخاص...",
+    "friends": "أصدقاء"
+  },
+  "social": {
+    "searchPlaceholder": "البحث عن طريق اسم المستخدم...",
+    "addFriend": "إضافة صديق",
+    "friendsList": "قائمة الأصدقاء"
   },
   "auth": {
     "loggedIn": "تم تسجيل الدخول",

@@ -95,6 +95,29 @@ export const api = {
     }
   },
 
+  async googleLogin(credential: string): Promise<AuthResponse> {
+    try {
+      const response = await fetch(`${API_URL}/google`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({ credential }),
+      });
+
+      const result: AuthResponse & ErrorPayload = await response.json();
+
+      if (!response.ok) {
+        return { error: stringifyError(result) };
+      }
+
+      return result;
+    } catch (error) {
+      return { error: 'Network error' };
+    }
+  },
+
   async me(): Promise<{ user: User | null; error?: string }> {
     try {
       const response = await fetch(`${API_URL}/me`, {

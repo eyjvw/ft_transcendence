@@ -3,6 +3,7 @@ import { logoutController } from "./controllers/logout.ts";
 import { meController } from "./controllers/me.ts";
 import { updateProfileController } from "./controllers/profile.ts";
 import { registerController } from "./controllers/register.ts";
+import { googleAuthController } from "./controllers/google.ts";
 import { StatusCode } from "./types/status_code.ts";
 
 const routes: Record<string, (req: Request) => Promise<Response>> = {
@@ -12,6 +13,7 @@ const routes: Record<string, (req: Request) => Promise<Response>> = {
 
 	"POST:/api/auth/login": loginController,
 	"POST:/api/auth/register": registerController,
+	"POST:/api/auth/google": googleAuthController,
 }
 
 const server: Bun.Server<undefined> = Bun.serve({

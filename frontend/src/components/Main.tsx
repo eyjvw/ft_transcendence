@@ -32,6 +32,7 @@ export default function Main({ user, onOpenProfile }: MainProps) {
   const [selectedMode, setSelectedMode] = useState<'solo' | 'bot' | 'online' | null>(null);
   const [mounted, setMounted] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [socialSearch, setSocialSearch] = useState('');
   const [recentBets] = useState<BetRow[]>([]);
 
   useEffect(() => {
@@ -99,9 +100,22 @@ export default function Main({ user, onOpenProfile }: MainProps) {
       <header className="stake-header">
         <div className="header-left">
           <h1 className="logo">ft_gambling</h1>
+          <div className="social-search-container">
+            <input
+              type="text"
+              placeholder={t('social.searchPlaceholder')}
+              value={socialSearch}
+              onChange={(e) => setSocialSearch(e.target.value)}
+              className="social-search-input"
+            />
+            <button className="social-search-btn">🔍</button>
+          </div>
         </div>
         <div className="header-right">
           <div className="coins-pill">$ {Number(user.coins ?? 0).toLocaleString()}</div>
+          <button className="social-btn" title={t('main.friends')}>
+            👥
+          </button>
           <button className="profile-btn" title={t('main.profile')} onClick={onOpenProfile}>
             <div className="avatar-container">
               {user.avatarUrl ? (
@@ -228,7 +242,7 @@ export default function Main({ user, onOpenProfile }: MainProps) {
         }
 
         .stake-container {
-          min-height: 100vh;
+          flex: 1;
           background-color: #0b1622;
           background-image:
             radial-gradient(circle at 15% 25%, rgba(64, 147, 238, 0.12), transparent 35%),
@@ -237,32 +251,126 @@ export default function Main({ user, onOpenProfile }: MainProps) {
             radial-gradient(circle at 80% 80%, rgba(50, 200, 180, 0.08), transparent 35%);
           color: #fff;
           padding: 0;
+          display: flex;
+          flex-direction: column;
         }
 
         .stake-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          padding: 20px 40px;
-          background: rgba(18, 29, 42, 0.85);
+          padding: 6px 20px;
+          background: rgba(18, 29, 42, 0.95);
           border-bottom: 1px solid rgba(255, 255, 255, 0.08);
           backdrop-filter: blur(14px);
+          position: sticky;
+          top: 0;
+          z-index: 100;
         }
 
         .header-left {
           display: flex;
           align-items: center;
+          gap: 20px;
+        }
+
+        .social-search-container {
+          display: flex;
+          align-items: center;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 6px;
+          padding: 1px 8px;
+          width: 200px;
+          transition: all 0.2s ease;
+        }
+
+        .social-search-container:focus-within {
+          background: rgba(255, 255, 255, 0.07);
+          border-color: rgba(26, 115, 232, 0.4);
+          width: 240px;
+        }
+
+        .social-search-input {
+          background: none;
+          border: none;
+          color: #fff;
+          padding: 4px;
+          font-size: 13px;
+          outline: none;
+          width: 100%;
+        }
+
+        .social-search-btn {
+          background: none;
+          border: none;
+          cursor: pointer;
+          opacity: 0.6;
+          padding: 4px;
+          font-size: 14px;
+        }
+
+        .social-search-btn:hover {
+          opacity: 1;
+        }
+
+        .header-right {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+
+        .social-btn {
+          background: rgba(255, 255, 255, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #fff;
+          width: 40px;
+          height: 40px;
+          border-radius: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 18px;
+          transition: all 0.2s ease;
+        }
+
+        .social-btn:hover {
+          background: rgba(255, 255, 255, 0.1);
+          transform: translateY(-2px);
+        }
+
+        .header-left {
+          display: flex;
+          align-items: center;
+          gap: 28px;
         }
 
         .logo {
-          font-size: 28px;
-          font-weight: 800;
+          font-size: 24px;
+          font-weight: 900;
           margin: 0;
-          letter-spacing: -1px;
-          background: linear-gradient(135deg, #1a73e8, #66a9ff);
+          letter-spacing: -0.2px;
+          background: linear-gradient(
+            120deg, 
+            #ffffff 0%, 
+            #66a9ff 25%, 
+            #1a73e8 50%, 
+            #66a9ff 75%, 
+            #ffffff 100%
+          );
+          background-size: 200% auto;
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           background-clip: text;
+          line-height: 1.2;
+          animation: shine 4s linear infinite;
+        }
+
+        @keyframes shine {
+          to {
+            background-position: 200% center;
+          }
         }
 
         .header-right {
@@ -272,19 +380,13 @@ export default function Main({ user, onOpenProfile }: MainProps) {
         }
 
         .coins-pill {
-          padding: 8px 12px;
-          background: rgba(255, 255, 255, 0.08);
-          border: 1px solid rgba(255, 255, 255, 0.15);
+          padding: 6px 10px;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.12);
           border-radius: 999px;
-          font-size: 13px;
+          font-size: 12px;
           font-weight: 700;
           color: #e7eef7;
-          letter-spacing: 0.3px;
-          text-transform: uppercase;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          min-width: 70px;
         }
 
         .profile-btn {
@@ -339,7 +441,7 @@ export default function Main({ user, onOpenProfile }: MainProps) {
         }
 
         .search-bar {
-          padding: 24px 40px;
+          padding: 8px 24px;
         }
 
         .search-input {
@@ -347,30 +449,29 @@ export default function Main({ user, onOpenProfile }: MainProps) {
           max-width: 1400px;
           margin: 0 auto;
           display: block;
-          padding: 12px 16px;
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.12);
+          padding: 10px 14px;
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.08);
           border-radius: 8px;
           color: #fff;
-          font-size: 16px;
+          font-size: 14px;
         }
 
         .search-input::placeholder {
-          color: #888;
+          color: #666;
         }
 
         .search-input:focus {
           outline: none;
-          border-color: rgba(26, 115, 232, 0.7);
-          box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.25);
+          border-color: rgba(26, 115, 232, 0.5);
         }
 
         .games-section {
-          padding: 0 40px 40px 40px;
+          padding: 0 24px 20px 24px;
         }
 
         .activity-section {
-          padding: 0 40px 60px 40px;
+          padding: 0 24px 24px 24px;
         }
 
         .activity-card {

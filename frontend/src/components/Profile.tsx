@@ -72,7 +72,7 @@ export default function Profile({
     }
 
     onUserUpdate(updatedUser);
-    setSuccess(t('profile.saved'));
+    setSuccess('profile.saved');
     setLoading(false);
   };
 
@@ -88,7 +88,7 @@ export default function Profile({
     reader.onload = async () => {
       const result = typeof reader.result === 'string' ? reader.result : '';
       if (!result) {
-        setError(t('profile.avatarError'));
+        setError('profile.avatarError');
         setLoading(false);
         return;
       }
@@ -100,13 +100,13 @@ export default function Profile({
         setError(updateResult.error);
       } else if (updateResult.user) {
         onUserUpdate(updateResult.user);
-        setSuccess(t('profile.avatarUpdated'));
+        setSuccess('profile.avatarUpdated');
       }
 
       setLoading(false);
     };
     reader.onerror = () => {
-      setError(t('profile.avatarError'));
+      setError('profile.avatarError');
       setLoading(false);
     };
     reader.readAsDataURL(file);
@@ -115,9 +115,6 @@ export default function Profile({
   return (
     <div className="profile-page">
       <header className="profile-header">
-        <button className="profile-back" onClick={onBack} type="button">
-          {t('profile.back')}
-        </button>
         <div className="profile-identity">
           <label className="profile-avatar-upload" htmlFor="profile-avatar-input" style={{ position: 'relative' }}>
             {avatarPreview ? (
@@ -150,10 +147,13 @@ export default function Profile({
               onChange={handleAvatarChange}
             />
           </label>
-          <div>
+          <div className="profile-info-main">
             <h1 className="profile-title">{user.username}</h1>
             <p className="profile-subtitle">{user.email}</p>
           </div>
+          <button className="profile-back-btn" onClick={onBack} type="button">
+            {t('profile.back')}
+          </button>
         </div>
       </header>
 
@@ -178,8 +178,8 @@ export default function Profile({
 
       <section className="profile-card">
         <h2 className="profile-section-title">{t('profile.languageTitle')}</h2>
-        {error && <div className="error-message">{error}</div>}
-        {success && <div className="info-message">{success}</div>}
+        {error && <div className="error-message">{t(error)}</div>}
+        {success && <div className="info-message">{t(success)}</div>}
         <div className="profile-row">
           <div>
             <label className="profile-label" htmlFor="profile-username">

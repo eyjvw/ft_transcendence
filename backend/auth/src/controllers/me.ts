@@ -32,7 +32,8 @@ export async function meController(req: Request): Promise<Response>
 				avatarUrl: user[0]!.avatar_url,
 				isActive: Boolean(user[0]!.is_active),
 				language: user[0]!.language,
-				coins: user[0]!.coins
+				coins: user[0]!.coins,
+				authProvider: user[0]!.auth_provider
 			}
 		}), { status: StatusCode.OK });
 	}
