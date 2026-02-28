@@ -1,4 +1,4 @@
-mv backend/social/.env.example backend/social/.env
-mv backend/auth/.env.example backend/auth/.env
-mv frontend/.env.example frontend/.env
-mv gateway/.env.example gateway/.env
+cp backend/social/.env.example backend/social/.env
+cp backend/auth/.env.example backend/auth/.env
+cp frontend/.env.example frontend/.env
+cp gateway/.env.example gateway/.env
