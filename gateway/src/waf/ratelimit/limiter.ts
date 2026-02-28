@@ -7,12 +7,11 @@ function getNumber(value: string | undefined, fallback: number): number
 	return Number.isFinite(parsed) ? parsed : fallback;
 }
 
-const windowMs: number = Math.max(1, getNumber(Bun.env.RATE_LIMIT_WINDOW_MS, 60_000));
-const max: number = Math.max(1, getNumber(Bun.env.RATE_LIMIT_MAX, 100));
-const enabled: boolean = (Bun.env.RATE_LIMIT_ENABLED ?? "true") !== "false";
-const cleanupMs: number = Math.max(1, getNumber(Bun.env.RATE_LIMIT_CLEANUP_MS, 60_000));
-const maxBuckets: number = Math.max(1000, getNumber(Bun.env.RATE_LIMIT_MAX_BUCKETS, 50_000));
-
+const enabled: boolean =	(Bun.env.RATE_LIMIT_ENABLED ?? "true") !== "false";
+const max: number =			Math.max(1, getNumber(Bun.env.RATE_LIMIT_MAX, 100));
+const windowMs: number =	Math.max(1, getNumber(Bun.env.RATE_LIMIT_WINDOW_MS, 60_000));
+const cleanupMs: number =	Math.max(1, getNumber(Bun.env.RATE_LIMIT_CLEANUP_MS, 60_000));
+const maxBuckets: number =	Math.max(1000, getNumber(Bun.env.RATE_LIMIT_MAX_BUCKETS, 50_000));
 const buckets: Map<string, Bucket> = new Map<string, Bucket>();
 
 const cleanupTimer: NodeJS.Timeout = setInterval((): void => {
@@ -36,11 +35,7 @@ const cleanupTimer: NodeJS.Timeout = setInterval((): void => {
 
 cleanupTimer.unref?.();
 
-function normalizeClientId(value: string | null): string
-{
-	return (value ?? "").split(",")[0]?.trim() || "";
-}
-
+function normalizeClientId(value: string | null): string { return (value ?? "").split(",")[0]?.trim() || ""; };
 export function getClientId(req: Request): string
 {
 	return (
@@ -52,14 +47,12 @@ export function getClientId(req: Request): string
 	);
 }
 
-export function checkRateLimit(key: string, now: number = Date.now()): RateLimitResult | null {
-
+export function checkRateLimit(key: string, now: number = Date.now()): RateLimitResult | null
+{
 	if (!enabled)
 		return null;
-
-	const safeKey: string = key || "unknown";
-
-	let bucket: Bucket | undefined = buckets.get(safeKey);
+	const safeKey: string =				key || "unknown";
+	let bucket: Bucket | undefined =	buckets.get(safeKey);
 
 	if (!bucket || now >= bucket.resetAt)
 	{
@@ -68,25 +61,24 @@ export function checkRateLimit(key: string, now: number = Date.now()): RateLimit
 			resetAt: now + windowMs
 		};
 		buckets.set(safeKey, bucket);
-	} else {
-		if (bucket.count >= max)
-		{
-			const resetInSeconds: number = Math.ceil((bucket.resetAt - now) / 1000);
-
-			return {
-				allowed: false,
-				limit: max,
-				remaining: 0,
-				resetInSeconds,
-				retryAfterSeconds: resetInSeconds
-			};
-		}
-
-		++bucket.count;
 	}
+	else if (bucket.count >= max)
+	{
+		const resetInSeconds: number = Math.ceil((bucket.resetAt - now) / 1000);
 
-	const remaining: number = Math.max(0, max - bucket.count);
-	const resetInSeconds: number = Math.ceil((bucket.resetAt - now) / 1000);
+		return {
+			allowed: false,
+			limit: max,
+			remaining: 0,
+			resetInSeconds,
+			retryAfterSeconds: resetInSeconds
+		};
+	}
+	else
+		++bucket.count;
+
+	const remaining: number			= Math.max(0, max - bucket.count);
+	const resetInSeconds: number	= Math.ceil((bucket.resetAt - now) / 1000);
 
 	return {
 		allowed: true,
