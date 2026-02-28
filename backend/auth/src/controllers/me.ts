@@ -1,8 +1,8 @@
-import { db } from "../db/init";
-import { users } from "../db/schemas/users";
-import { eq } from "drizzle-orm";
-import { verifyJWT } from "../jwt/jwt";
-import { StatusCode } from "../types/status_code.ts";
+import { db }			from "../db/init";
+import { users }		from "../db/schemas/users";
+import { eq }			from "drizzle-orm";
+import { verifyJWT }	from "../jwt/jwt";
+import { StatusCode }	from "../types/status_code.ts";
 
 export async function meController(req: Request): Promise<Response>
 {
