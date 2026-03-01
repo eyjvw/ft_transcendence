@@ -4,7 +4,6 @@ import { z, type ZodSafeParseResult }	from "zod";
 const errorResponse = (errStr: string, code: number):		Response => { return (new Response(JSON.stringify({ error: errStr }), { status: code }))};
 
 export const userTaken = (): 								Response => { return (errorResponse("Email or username already in use",	StatusCode.BAD_REQUEST));			};
-export const server = (): 									Response => { return (errorResponse("Server Error",						StatusCode.INTERNAL_SERVER_ERROR));	};
 export const parsing = (parsed: ZodSafeParseResult<any>):	Response => { return (errorResponse(z.treeifyError(parsed.error),		StatusCode.BAD_REQUEST));			};
 export const unauthorized = (): 							Response => { return (errorResponse("Unauthorized",						StatusCode.UNAUTHORIZED));			};
 export const noCookie = (): 								Response => { return (errorResponse("No Cookie",						StatusCode.BAD_REQUEST));			};
@@ -12,3 +11,12 @@ export const noUpdates = (): 								Response => { return (errorResponse("No upd
 export const userNotFound = (): 							Response => { return (errorResponse("User not found",					StatusCode.NOT_FOUND));				};
 export const usernameTaken = (): 							Response => { return (errorResponse("Username already in use",			StatusCode.BAD_REQUEST));			};
 export const emailTaken = (): 								Response => { return (errorResponse("Email already in use",				StatusCode.BAD_REQUEST));			};
+export const invalidCred = ():								Response => { return (errorResponse("Invalid credentials",				StatusCode.UNAUTHORIZED));			};
+export const noCred = ():									Response => { return (errorResponse("No credential provided",			StatusCode.BAD_REQUEST));			};
+export const invalidGoogleToken = ():						Response => { return (errorResponse("Invalid Google token",				StatusCode.UNAUTHORIZED));			};
+export const invalidGoogleEmail = ():						Response => { return (errorResponse("Email not provided by Google",		StatusCode.BAD_REQUEST));			};
+export const invalidGoogleAud = ():							Response => { return (errorResponse("Invalid audience",					StatusCode.UNAUTHORIZED));			};
+export const failedLinkingAcc = ():							Response => { return (errorResponse("Failed to link Google account",	StatusCode.INTERNAL_SERVER_ERROR));	};
+export const server = (): 									Response => { return (errorResponse("Server Error",						StatusCode.INTERNAL_SERVER_ERROR));	};
+export const userNorFoundCreated = ():						Response => { return (errorResponse("User not found or created",		StatusCode.INTERNAL_SERVER_ERROR));	};
+export const failedCreatingUser = ():						Response => { return (errorResponse("Failed to create user",			StatusCode.INTERNAL_SERVER_ERROR)); };
